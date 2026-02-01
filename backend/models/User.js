@@ -9,5 +9,41 @@ const userSchema = new mongoose.Schema({
         trim: true,
         minlength: [3, 'Username must be atleast 3 character']
     },
-    
-})
+    email : {
+        type: String,
+        required: [true, 'Please provide an email'],
+        unique: true,
+        lowercase: true,
+        match: [/^\S+@\S+\.\S+$/,'Please provide a valid email']
+    },
+    password : {
+        type: String,
+        required: [true, 'Please provide a password'],
+        minlength: [6, 'Password must be atleast 6 character'],
+        select : false
+    },
+    profileImage: {
+        type: String,
+        default : null
+    }
+},{
+    timestamps: true
+});
+
+//Hash password before save
+userSchema.pre('save', async function(next){
+    if(!this.isModified('password')){
+        next();
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+});
+
+//Compare password methods 
+userSchema.methods.matchPassword = async function (enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
+const User = mongoose.model('User', userSchema);
+
+export default User;
