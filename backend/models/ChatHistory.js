@@ -31,7 +31,7 @@ const chatHistorySchema = new mongoose.Schema({
         }
     }]
 },{
-    timestamps: true;
+    timestamps: true
 });
 
 // index for faster queries
