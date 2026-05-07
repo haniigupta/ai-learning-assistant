@@ -7,7 +7,9 @@ import path from 'path'
 import { fileURLToPath } from 'url';
 import connectDB from './config/db.js'
 import errorHandler from './middleware/errorHandler.js'
+
 import authRoutes from './routes/authRoutes.js'
+import documentRoutes from './routes/documentRoutes.js'
 
 import { connect } from 'http2';
 import { STATUS_CODES } from 'http';
@@ -40,7 +42,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // routes 
 app.use('/api/auth', authRoutes)
-
+app.use('/api/documents', documentRoutes)
 app.use(errorHandler);
 
 //404 handler
