@@ -2,7 +2,7 @@ import express from 'express'
 import {
     uploadDocument,
     getDocuments,
-    getDocumentById,
+    getDocument,
     updateDocument,
     deleteDocument
 } from '../controllers/documentController.js'
@@ -16,7 +16,7 @@ router.use(protect);
 
 router.post('/upload', upload.single('file'), uploadDocument);
 router.get('/', getDocuments);
-router.get('/:id', getDocumentById);
+router.get('/:id', getDocument);
 router.put('/:id', updateDocument);
 router.delete('/:id', deleteDocument);
 
