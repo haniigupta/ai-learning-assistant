@@ -45,3 +45,7 @@ export const deleteDocument = async (req, res, next) => {
 export const updateDocument = async (req, res, next) => {   
 
 }
+// @desc Generate flashcards from a document
+// @route POST /api/documents/:id/flashcards
+// @access Private
+export const generateFlashcards = async (req, res, next) => {}
