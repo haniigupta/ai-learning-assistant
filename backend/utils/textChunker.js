@@ -100,3 +100,43 @@ if (chunks.length === 0 && cleanedText.length > 0) {
 
 return chunks;
 }; 
+
+/**
+ * Find relevant chunks based on keyword matching
+ * @param{Array<Object>} chunks - The array of text chunks with metadata
+ * @param{string} query - The search query to match against the chunks
+ * @param{number} maxChunks - The number of top relevant chunks to return
+ * @return {Array<Object>} - An array of the most relevant chunks based on keyword matching
+ */
+export const findRelevantChunks = (chunks, query, maxChunks = 3) => {
+    if(!chunks || chunks.length === 0 || !query){
+        return [];
+    }
+    // Common stop words
+    const stopWords = new Set(['the', 'is', 'in', 'and', 'to', 'of', 'a', 'that', 'it', 'with', 'as', 'for', 'was', 'on', 'are', 'by', 'this', 'be', 'or', 'from']);
+    // Normalize query and remove stop words
+    const queryWords = query.toLowerCase().split(/\s+/).filter(word => !stopWords.has(word));
+
+    if(queryWords.length === 0){
+        // return clean chunk object without mongoose metadta
+        return chunks.slice(0, maxChunks).map(chunk => ({
+            content: chunk.content,
+            chunkIndex: chunk.chunkIndex,
+            pageNumber: chunk.pageNumber,
+            _id: chunk._id
+        }));
+    }
+    // Score chunks based on keyword matches
+    const scoredChunks = chunks.map((chunk, index) => {
+        const content = chunk.content.toLowerCase();
+        const contentWords = content.split(/\s+/).length;
+        let score = 0;
+
+        // score each query words
+        for (const word of queryWords) {
+            //exact word match -- higher score
+            
+        }
+    })
+
+}
