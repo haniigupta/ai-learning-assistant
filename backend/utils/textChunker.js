@@ -135,8 +135,50 @@ export const findRelevantChunks = (chunks, query, maxChunks = 3) => {
         // score each query words
         for (const word of queryWords) {
             //exact word match -- higher score
-            
-        }
-    })
+            const exactMatches = (content.match(new RegExp(`\\b${word}\\b`, 'g')) || []).length;
+            score += exactMatches *3; // weight for exact matches
 
-}
+            // partial match (substring) -- lower score
+            const partialMatches = (content.match(new RegExp(word, 'g')) || []).length;
+            score += Math.max(0, partialMatches - exactMatches) * 1.5; // weight for partial matches
+        }
+        // Bonus: multiple query word found
+        const uniqueWordsFound = queryWords.filter(word =>
+            content.includes(word)
+        ).length;
+        if(uniqueWordsFound > 1){
+            score += uniqueWordsFound * 2; // weight for multiple query words found
+        }
+
+        // normalize by content length
+        const normalizedScore = score/Math.sqrt(contentWords); // normalize by content length to avoid bias towards longer chunks
+
+        // small bonus for earlier chunks
+        const positionBonus = 1- (index / chunks.length); // earlier chunks get a higher bonus
+
+        // return clean chunk object without mongoose metadata
+        return {
+            content: chunk.content,
+            chunkIndex: chunk.chunkIndex,
+            pageNumber: chunk.pageNumber,
+            _id: chunk._id,
+            score: normalizedScore + positionBonus,
+            rawScore: score,
+            matchedWords: uniqueWordsFound
+        }       
+
+        });
+        return scoredChunks
+        .filter(chunk => chunk.score > 0) // filter out chunks with no matches
+        .sort((a, b) => {
+            if(b.score === a.score){
+                return b.rawScore - a.rawScore; // if scores are equal, sort by raw score
+            }
+            if(b.matchedWords !== a.matchedWords){
+                return b.matchedWords - a.matchedWords; // if matched words are equal, sort by matched words
+            }
+            return a.chunkIndex - b.chunkIndex; // otherwise, maintain original order
+        })
+        .slice(0, maxChunks); // return top relevant chunks
+    };
+
