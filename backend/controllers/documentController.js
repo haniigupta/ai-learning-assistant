@@ -33,12 +33,53 @@ export const uploadDocument = async (req, res, next) => {
         const baseUrl = `http://localhost:${process.env.PORT || 5000}`;
         const fileUrl = `${baseUrl}/uploads/${req.file.filename}`;
 
+        //create document record in database
+        const document = await Document.create({
+            userId: req.user._id,
+            title,
+            fileName: req.file.originalname,
+            filePath: fileUrl,
+            fileSize: req.file.size,
+            status: "processing"
+        });
+        // Process the PDF in the background (async)
+        processPDF(document._id, req.file.path).catch( async (error) => {
+            console.error("Error processing PDF:", error);
+        });
+
+        res.status(201).json({
+            success: true,
+            data: document,
+            message: "File uploaded successfully, processing in background",
+        }); 
+
     } catch (error) {
         // cleanup file on error
         if(req.file){
             await fs.unlink(req.file.path).catch( ()=> {});
         }
         next(error);
+    }
+};
+//Hleper function to process PDF and update document status
+const processPDF = async (documentId, filePath) => {
+    try {
+        const { text } = await extraTextFromPDF(filePath);
+
+        // create chunks
+        const chunks = chunkText(text, 500, 50);
+
+        // Update document status
+        await Document.findByIdAndUpdate(documentId, { 
+            extractedText: text,
+            chunks,
+            status: "processed" 
+        });
+        console.log(`Document ${documentId} processed successfully with ${chunks.length} chunks.`);
+
+    } catch (error) {
+        console.error(`Error processing document ${documentId}:`, error);
+        await Document.findByIdAndUpdate(documentId, { status: "failed" });
     }
 };
 
