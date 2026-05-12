@@ -5,6 +5,7 @@ import Quiz from '../models/Quiz.js'
 import { extraTextFromPDF } from '../utils/textChunker.js'
 import fs from 'fs/promises';
 import mongoose from 'mongoose';
+import { count } from 'console';
 
 // @desc Upload a document
 // @route POST /api/documents/upload
@@ -61,7 +62,7 @@ export const uploadDocument = async (req, res, next) => {
         next(error);
     }
 };
-//Hleper function to process PDF and update document status
+//Helper function to process PDF and update document status
 const processPDF = async (documentId, filePath) => {
     try {
         const { text } = await extraTextFromPDF(filePath);
@@ -88,7 +89,38 @@ const processPDF = async (documentId, filePath) => {
 // @access Private
 export const getDocuments = async (req, res, next) => {
      try {
-        
+        const  documents = await Document.aggregate([
+            { $match: { userId: mongoose.Types.ObjectId(req.user._id) } },
+            { $lookup: {
+                from: 'flashcards',
+                localField: '_id',
+                foreignField: 'documentId',
+                as: 'flashcards'
+            }},
+            { $lookup: {
+                from: 'quizzes',
+                localField: '_id',
+                foreignField: 'documentId',
+                as: 'quizzes'
+            }},
+            { $addFields: {
+                flashcardCount: { $size: "$flashcards" },
+                quizCount: { $size: "$quizzes" }
+            }},
+            { $project: {
+                extractedText: 0,
+                chunks: 0,
+                flashcardSets: 0,
+                quizzes: 0
+            }},
+            { $sort: { uploadDate: -1 } }
+        ]);
+
+        res.status(200).json({
+            success: true,
+            count: documents.length,
+            data: documents
+        });
 
     } catch (error) {
         next(error);
