@@ -6,7 +6,7 @@ const documentSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    titles: {
+    title: {
         type: String,
         required: [true, 'Please provide a document title'],
         trim : true
