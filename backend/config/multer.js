@@ -1,3 +1,4 @@
+import fs from 'fs';
 import multer from 'multer';
 import path, { parse } from 'path';
 import { fileURLToPath } from 'url';
