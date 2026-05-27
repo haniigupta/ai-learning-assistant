@@ -134,7 +134,24 @@ export const toggleStarFlashcard = async (req, res, next) => {
 //@access Private
 export const deleteFlashcardSet = async (req, res, next) => {
     try {
+        const flashcardSet = await Flashcard.findOneAndDelete({
+            _id: req.params.id,
+            userId: req.user._id
+        });
+        if(!flashcardSet){
+            return res.status(404).json({
+                success: false,
+                error: "Flashcard set not found",
+                statusCode : 404
+            });
+        }
 
+        await flashcardSet.deleteOne();
+
+        res.status(200).json({
+            success: true,
+            message: "Flashcard set deleted"
+        });
     }catch(error){
         next(error);
     }
