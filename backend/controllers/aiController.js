@@ -10,7 +10,52 @@ import { findRelevantChunks } from '../utils/textChunker.js';
 // @access Private
 export const generateFlashcards = async (req, res, next) => {
     try{
+        const { documentId, count=10 } = req.body;
 
+        if(!documentId){
+            return res.status(400).json({
+                success: false,
+                message: "documentId is required",  
+                statusCode : 400
+            });
+        }
+        const document = await Document.findOne({ 
+            _id: documentId, 
+            userId: req.user._id,
+            status: 'ready'
+        });
+        if(!document){
+            return res.status(404).json({
+                success: false,
+                message: "Document not found or not ready for processing",
+                statusCode : 404
+            });
+        }
+
+        // generate flashcard using gemini
+        const cards = await geminiService.generateFlashcards(
+            document.extractedText, 
+            parseInt(count)
+        );
+        // save flashcards to db
+        const flashcardSet = await Flashcard.create({
+            documentId: document._id,
+            userId: req.user._id,
+            cards: cards.map( card => ({
+                question: card.question,
+                answer: card.answer,
+                difficulty: card.difficulty,
+                reviewCount: 0,
+                isStarred: false
+             }))
+         });
+        
+
+        res.status(200).json({
+            success: true,
+            data: flashcardSet,
+            message: 'Flashcards generated successfully'
+        });
     }catch (error) {
         next(error);
     }
