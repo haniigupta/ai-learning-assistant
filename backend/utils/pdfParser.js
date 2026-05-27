@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import * as pdfjs from "pdf-parse";
+import pdf from "pdf-parse";
 
 export const extractTextFromPDF = async (filePath) => {
 
@@ -7,12 +7,12 @@ export const extractTextFromPDF = async (filePath) => {
 
         const dataBuffer = await fs.readFile(filePath);
 
-        const data = await pdfjs.default(dataBuffer);
+        const data = await pdf(dataBuffer);
 
         return {
             text: data.text,
             numPages: data.numpages,
-            info: data.info,
+            info: data.info
         };
 
     } catch (error) {

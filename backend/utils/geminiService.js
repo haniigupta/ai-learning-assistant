@@ -33,7 +33,7 @@ export const generateFlashcards = async (text, count = 10) => {
     
     try {
         const response = await ai.models.generateContent({
-            model: 'gemini-2.0-flashcard',
+            model: 'gemini-2.5-flash',
             contents: prompt,
         });
 
@@ -53,9 +53,10 @@ export const generateFlashcards = async (text, count = 10) => {
                 } else if (line.startsWith('A:')) {
                     answer = line.substring(2).trim();
                 } else if (line.startsWith('D:')) {
-                   const difficulty = line.substring(2).trim().toLowerCase();
-                     if (['easy', 'medium', 'hard'].includes(difficulty)) {
-                        difficulty = difficulty;
+                   
+                    const diff = line.substring(2).trim().toLowerCase();
+                     if (['easy', 'medium', 'hard'].includes(diff)) {
+                        difficulty = diff;
                      }
                 }
             }
@@ -96,7 +97,7 @@ ${text.substring(0, 15000)}`;
 
     try{
         const response = await ai.models.generateContent({
-            model: 'gemini-2.0-quiz',
+            model: 'gemini-2.5-flash',
             contents: prompt,
         });
 
@@ -152,7 +153,7 @@ Text:
 ${text.substring(0, 15000)}`;
     try{
         const response = await ai.models.generateContent({
-            model: 'gemini-2.0-summary',
+            model: 'gemini-2.5-flash',
             contents: prompt,
         });
 
@@ -185,7 +186,7 @@ export const chatWithContext = async (question, chunks) => {
 
     try{
         const response = await ai.models.generateContent({
-            model: 'gemini-2.0-chat',
+            model: 'gemini-2.5-flash',
             contents: prompt,
         });
         const generatedText = response.text;
@@ -211,7 +212,7 @@ export const explainConcept = async (concept, context) => {
     ${context.substring(0, 10000)}`;
     try{
         const response = await ai.models.generateContent({
-            model: 'gemini-2.0-explain',
+            model: 'gemini-2.5-flash',
             contents: prompt,
         });
         const generatedText = response.text;
