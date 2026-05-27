@@ -10,6 +10,7 @@ import errorHandler from './middleware/errorHandler.js'
 
 import authRoutes from './routes/authRoutes.js'
 import documentRoutes from './routes/documentRoutes.js'
+import flashcardRoutes from './routes/flashcardRoutes.js'
 
 import { connect } from 'http2';
 import { STATUS_CODES } from 'http';
@@ -43,6 +44,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // routes 
 app.use('/api/auth', authRoutes)
 app.use('/api/documents', documentRoutes)
+app.use('/api/flashcards', flashcardRoutes)
+
 app.use(errorHandler);
 
 //404 handler
