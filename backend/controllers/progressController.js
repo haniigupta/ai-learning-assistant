@@ -1,17 +1,17 @@
-import Document from '../models/documentModel.js';
-import Flashcard from '../models/flashcardModel.js';
-import Quiz from '../models/quizModel.js';
+import Document from '../models/Document.js';
+import Flashcard from '../models/Flashcard.js';
+import Quiz from '../models/Quiz.js';
 
 //@desc get user learning stats
 //@route GET /api/progress/dashboard
 //@access Private
-const getDashboard = async (req, res) => {
+export const getDashboard = async (req, res, next) => {
     try {
         const userId = req.user._id;
 
         //get counts
         const totalDocuments = await Document.countDocuments({ user: userId });
-        const totalFlashcards = await Flashcard.countDocuments({ user: userId });
+        const totalFlashcardSets = await Flashcard.countDocuments({ user: userId });
         const totalQuizzes = await Quiz.countDocuments({ user: userId });
         const completedQuizzes = await Quiz.countDocuments({ user: userId, completedAt: { $ne: null } });
 
