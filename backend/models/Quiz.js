@@ -11,7 +11,7 @@ const quizSchema = new mongoose.Schema({
         ref: 'Document',
         required: true
     },
-    titles: {
+    title: {
         type: String,
         required: true,
         trim: true
@@ -41,7 +41,7 @@ const quizSchema = new mongoose.Schema({
             default: 'medium'
         }
     }],
-    userAnswer: [{
+    userAnswers: [{
         questionIndex: {
             type: Number,
             required: true
@@ -64,7 +64,7 @@ const quizSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    totalQuestion: {
+    totalQuestions: {
         type: Number,
         required: true
     },

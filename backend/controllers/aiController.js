@@ -183,7 +183,7 @@ export const chat = async (req, res, next) => {
         }
         // find relevant chunks
         const relevantChunks = findRelevantChunks(document.chunks, question,3);
-        const chunkIndices = relevantChunks.map(C => c.chunkIndex);
+        const chunkIndices = relevantChunks.map(c => c.chunkIndex);
 
         // get or create chat histor
         let chatHistory = await ChatHistory.findOne({
