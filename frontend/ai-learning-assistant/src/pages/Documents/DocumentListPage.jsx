@@ -73,10 +73,12 @@ const DocumentListPage = () => {
     }
   };
 
-  const handleDeleteRequest= (doc) =>{
-    setSelectedDoc(doc);
-    setIsDeleteModalOpen(true);
-  };
+  const handleDeleteRequest = (doc) => {
+  console.log("DELETE CLICKED", doc);
+
+  setSelectedDoc(doc);
+  setIsDeleteModalOpen(true);
+};
 
   const handleConfirmDelete = async () =>{
     if(!selectedDoc) return;
@@ -238,6 +240,47 @@ const DocumentListPage = () => {
 
     </div>
 
+  </div>
+)}
+
+{isDeleteModalOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+
+      <h2 className="text-xl font-semibold mb-3">
+        Delete Document
+      </h2>
+
+      <p className="text-gray-600 mb-6">
+        Are you sure you want to delete
+        <span className="font-semibold">
+          {" "}{selectedDoc?.title}
+        </span>?
+      </p>
+
+      <div className="flex justify-end gap-3">
+
+        <button
+          onClick={() => {
+            setIsDeleteModalOpen(false);
+            setSelectedDoc(null);
+          }}
+          className="px-4 py-2 border border-gray-300 rounded-xl"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={handleConfirmDelete}
+          disabled={deleting}
+          className="px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600"
+        >
+          {deleting ? "Deleting..." : "Delete"}
+        </button>
+
+      </div>
+
+    </div>
   </div>
 )}
 

@@ -183,8 +183,8 @@ export const deleteDocument = async (req, res, next) => {
         }
         // delte file from file system
         await fs.unlink(document.filePath).catch( () => {});
-        // delete document
-        await document.deleteOne();
+        
+        
 
         res.status(200).json({
             success: true,
