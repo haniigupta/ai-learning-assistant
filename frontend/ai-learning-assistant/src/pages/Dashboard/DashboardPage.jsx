@@ -165,8 +165,42 @@ const DashboardPage = () => {
 
         </div>
 
-        <div className='text-gray-500 text-sm'>
-          No recent activity available.
+        <div className='space-y-4'>
+
+          {dashboardData.recentActivity.documents?.map((doc) => (
+            <div
+              key={doc._id}
+              className='flex items-center justify-between p-4 bg-gray-50 rounded-xl'
+            >
+              <div>
+                <p className='font-medium text-gray-900'>
+                  📄 {doc.title}
+                </p>
+
+                <p className='text-sm text-gray-500'>
+                  Document Activity
+                </p>
+              </div>
+            </div>
+          ))}
+
+          {dashboardData.recentActivity.quizzes?.map((quiz) => (
+            <div
+              key={quiz._id}
+              className='flex items-center justify-between p-4 bg-gray-50 rounded-xl'
+            >
+              <div>
+                <p className='font-medium text-gray-900'>
+                  🧠 {quiz.title}
+                </p>
+
+                <p className='text-sm text-gray-500'>
+                  Score: {quiz.score}/{quiz.totalQuestions}
+                </p>
+              </div>
+            </div>
+          ))}
+
         </div>
 
       </div>

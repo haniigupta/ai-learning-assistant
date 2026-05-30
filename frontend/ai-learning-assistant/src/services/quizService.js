@@ -45,6 +45,19 @@ const deleteQuiz = async (quizId) => {
         throw error.response?.data || { message : 'Failed to delete quiz '};
     }
 };
+const getAllQuizzes = async () => {
+    try {
+        const response = await axiosInstance.get(
+            API_PATHS.QUIZZES.GET_ALL_QUIZZES
+        );
+
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || {
+            message: 'Failed to fetch quizzes'
+        };
+    }
+};
 
 const quizService = {
     getQuizzesForDocument,
@@ -52,6 +65,7 @@ const quizService = {
     getQuizResults,
     submitQuiz,
     deleteQuiz,
+    getAllQuizzes,
 }
 
 export default quizService; 

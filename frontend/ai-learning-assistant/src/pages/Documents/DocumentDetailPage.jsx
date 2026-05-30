@@ -18,6 +18,8 @@ import Spinner from '../../components/common/Spinner';
 
 import documentService from '../../services/documentService';
 import aiService from '../../services/aiService';
+import flashcardService from '../../services/flashcardService';
+import quizService from '../../services/quizService';
 import ChatWindow from '../../components/chat/ChatWindow';
 import ChatInput from '../../components/chat/ChatInput';
 import ChatMessage from '../../components/chat/ChatMessage';
@@ -32,6 +34,9 @@ const DocumentDetailPage = () => {
   const [messages, setMessages] = useState([]);
   const [question, setQuestion] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
+
+  const [flashcards, setFlashcards] = useState([]);
+  const [quizzes, setQuizzes] = useState([]);
 
   const [summary, setSummary] = useState('');
   const [summaryLoading, setSummaryLoading] = useState(false);
@@ -52,8 +57,53 @@ const DocumentDetailPage = () => {
     }
   };
 
+  const loadFlashcards = async () => {
+    try {
+      const response =
+        await flashcardService.getFlashcardsForDocument(id);
+
+      console.log("FLASHCARD FULL RESPONSE:", response);
+
+      console.log(
+        "FLASHCARD DATA:",
+        response.data
+      );
+
+      if (response.data?.length > 0) {
+        console.log(
+          "FIRST FLASHCARD:",
+          response.data[0]
+        );
+
+        console.log(
+          "CARDS:",
+          response.data[0]?.cards
+        );
+      }
+
+      setFlashcards(response.data || []);
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const loadQuizzes = async () => {
+    try {
+      const response =
+        await quizService.getQuizzesForDocument(id);
+      console.log("QUIZZES:", response);
+      setQuizzes(response.data || []);
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchDocument();
+    loadFlashcards();
+    loadQuizzes();
 
     const loadChatHistory = async () => {
 
@@ -98,10 +148,10 @@ const DocumentDetailPage = () => {
       await aiService.generateFlashcards(id, {
         count: 10
       });
-
+      await loadFlashcards();
       toast.success('Flashcards generated');
 
-      navigate('/flashcards');
+      fetchDocument();
     } catch (error) {
       toast.error(error.message || 'Failed to generate flashcards');
     } finally {
@@ -116,8 +166,9 @@ const DocumentDetailPage = () => {
       await aiService.generateQuiz(id, {
         numQuestions: 10
       });
-
+      await loadQuizzes();
       toast.success('Quiz generated');
+      fetchDocument();
     } catch (error) {
       toast.error(error.message || 'Failed to generate quiz');
     } finally {
@@ -217,6 +268,16 @@ const DocumentDetailPage = () => {
     statusConfig.processing;
 
   const StatusIcon = currentStatus.icon;
+
+  const latestFlashcardSet =
+    flashcards.length > 0
+      ? flashcards[flashcards.length - 1]
+      : null;
+
+  const latestQuiz =
+    quizzes.length > 0
+      ? quizzes[quizzes.length - 1]
+      : null;
 
   return (
 
@@ -391,6 +452,94 @@ const DocumentDetailPage = () => {
         )}
 
       </div>
+
+      {/* Flashcards */}
+      <div className="bg-white rounded-3xl border p-6 mt-6">
+        <h2 className="text-2xl font-bold mb-4">
+          Flashcards
+        </h2>
+
+        {!latestFlashcardSet?.cards?.length ? (
+          <p className="text-gray-500">
+            No flashcards generated yet.
+          </p>
+        ) : (
+          <div className="space-y-4">
+
+            {latestFlashcardSet.cards
+              .slice(0, 5)
+              .map((card, index) => (
+                <div
+                  key={index}
+                  className="border rounded-xl p-4"
+                >
+                  <p className="font-semibold">
+                    Q: {card.question}
+                  </p>
+
+                  <p className="text-gray-600 mt-2">
+                    A: {card.answer}
+                  </p>
+                </div>
+              ))}
+
+          </div>
+        )}
+      </div>
+
+      {/* Quiz */}
+      <div className="bg-white rounded-3xl border p-6 mt-6">
+        <h2 className="text-2xl font-bold mb-4">
+          Quiz
+        </h2>
+
+        {!latestQuiz ? (
+          <p className="text-gray-500">
+            No quiz generated yet.
+          </p>
+        ) : (
+          <div className="space-y-4">
+
+            <div className="border rounded-xl p-4">
+              <h3 className="font-semibold text-lg">
+                {latestQuiz.title}
+              </h3>
+
+              <p className="text-gray-500 mt-2">
+                {latestQuiz.questions?.length || 0} Questions
+              </p>
+
+              <button
+                onClick={() =>
+                  navigate(`/quiz/${latestQuiz._id}`)
+                }
+                className="mt-4 px-4 py-2 bg-[#00d492] text-white rounded-xl hover:opacity-90"
+              >
+                Start Quiz
+              </button>
+            </div>
+
+            {/* Preview first 3 questions */}
+            <div className="space-y-3">
+              {latestQuiz.questions
+                ?.slice(0, 3)
+                .map((question, index) => (
+                  <div
+                    key={index}
+                    className="border rounded-xl p-4"
+                  >
+                    <p className="font-medium">
+                      Q{index + 1}. {question.question}
+                    </p>
+                  </div>
+                ))}
+            </div>
+
+          </div>
+        )}
+      </div>
+
+
       <div className="bg-white border border-gray-200 rounded-3xl p-8">
 
         <h2 className="text-2xl font-bold mb-6">

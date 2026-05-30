@@ -12,6 +12,7 @@ import FlashcardListPage from './pages/Flashcards/FlashcardListPage';
 import FlashcardPage from './pages/Flashcards/FlashcardPage';
 import QuizTakePage from './pages/Quizzes/QuizTakePage';
 import QuizResultPage from './pages/Quizzes/QuizResultPage';
+import QuizListPage from './pages/Quizzes/QuizListPage';
 import ProfilePage from './pages/Profile/ProfilePage';
 import { useAuth } from './context/AuthContext';
 
@@ -38,10 +39,12 @@ const App = () => {
   <Route path="/documents" element={<DocumentListPage />} />
   <Route path="/profile" element={<ProfilePage />} />
   <Route path="/flashcards" element={<FlashcardListPage />} />
+  <Route path="/quizzes" element={<QuizListPage />} />
   <Route path="/flashcards/:documentId" element={<FlashcardPage />} />
   <Route path="/documents/:id" element={<DocumentDetailPage />}/>
   <Route path="/quiz/:quizId" element={<QuizTakePage />}/>
   <Route path="/quiz-results/:quizId" element={<QuizResultPage />}/>
+
 </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

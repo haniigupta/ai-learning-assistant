@@ -10,6 +10,7 @@ import {
     LogOut,
     BrainCircuit,
     BookOpen,
+    ClipboardList,
     X
 } from 'lucide-react'
 
@@ -27,6 +28,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
         { to: '/dashboard', icon: LayoutDashboard, text: 'Dashboard' },
         { to: '/documents', icon: FileText, text: 'Documents' },
         { to: '/flashcards', icon: BookOpen, text: 'Flashcards' },
+         { to: '/quizzes', icon: ClipboardList, text: 'Quizzes' },
         { to: '/profile', icon: User, text: 'Profile' },
     ];
 

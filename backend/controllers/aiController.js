@@ -37,8 +37,15 @@ export const generateFlashcards = async (req, res, next) => {
             document.extractedText, 
             parseInt(count)
         );
+        // Delete old flashcard sets for this document
+await Flashcard.deleteMany({
+    userId: req.user._id,
+    documentId: document._id
+});
+
         // save flashcards to db
         const flashcardSet = await Flashcard.create({
+            
             documentId: document._id,
             userId: req.user._id,
             cards: cards.map( card => ({
@@ -48,6 +55,8 @@ export const generateFlashcards = async (req, res, next) => {
                 reviewCount: 0,
                 isStarred: false
              }))
+
+             
          });
         
 
@@ -92,6 +101,11 @@ export const generateQuiz = async (req, res, next) => {
             document.extractedText, 
             parseInt(numQuestions)
         );
+
+        await Quiz.deleteMany({
+    userId: req.user._id,
+    documentId: document._id
+});
 
         // save quiz to db
         const quiz = await Quiz.create({

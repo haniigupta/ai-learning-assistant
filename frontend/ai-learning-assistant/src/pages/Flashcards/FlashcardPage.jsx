@@ -33,6 +33,7 @@ const FlashcardPage = () => {
         await flashcardService.getFlashcardsForDocument(
           documentId
         );
+        console.log("FLASHCARD RESPONSE:", response);
 
       const flashcards =
         response?.data?.[0] || null;
