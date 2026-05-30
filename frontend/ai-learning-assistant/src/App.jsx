@@ -38,7 +38,10 @@ const App = () => {
   <Route path="/documents" element={<DocumentListPage />} />
   <Route path="/profile" element={<ProfilePage />} />
   <Route path="/flashcards" element={<FlashcardListPage />} />
+  <Route path="/flashcards/:documentId" element={<FlashcardPage />} />
   <Route path="/documents/:id" element={<DocumentDetailPage />}/>
+  <Route path="/quiz/:quizId" element={<QuizTakePage />}/>
+  <Route path="/quiz-results/:quizId" element={<QuizResultPage />}/>
 </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
