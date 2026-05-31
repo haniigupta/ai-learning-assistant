@@ -10,9 +10,9 @@ const Header = ({ toggleSidebar }) => {
     const { darkMode, toggleTheme } = useTheme();
 
     return (
-        <header className='sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 transition-colors duration-300'>
+        <header className='sticky top-0 z-40 bg-white border-b dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 transition-colors duration-300'>
 
-            <div className='flex items-center justify-between px-4 md:px-6 py-4'>
+            <div className='flex items-center justify-between px-6 py-4'>
 
                 {/* Mobile Menu */}
                 <button
@@ -27,25 +27,25 @@ const Header = ({ toggleSidebar }) => {
 
                 <div className='flex items-center gap-4'>
                     <button
-  onClick={toggleTheme}
-  className='w-10 h-10 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center hover:bg-gray-50 transition'
->
+                        onClick={toggleTheme}
+                        className='w-10 h-10 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center hover:bg-gray-50 transition'
+                    >
 
-  {darkMode ? (
-    <Sun
-      size={18}
-      strokeWidth={2}
-      className='text-yellow-500'
-    />
-  ) : (
-    <Moon
-      size={18}
-      strokeWidth={2}
-      className='text-gray-600'
-    />
-  )}
+                        {darkMode ? (
+                            <Sun
+                                size={18}
+                                strokeWidth={2}
+                                className='text-yellow-500'
+                            />
+                        ) : (
+                            <Moon
+                                size={18}
+                                strokeWidth={2}
+                                className='text-gray-600'
+                            />
+                        )}
 
-</button>
+                    </button>
 
                     {/* Notification */}
                     <button className='relative w-10 h-10 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center hover:bg-gray-50 transition'>
