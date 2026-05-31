@@ -3,7 +3,7 @@ import Flashcard from '../models/Flashcard.js';
 import Quiz from '../models/Quiz.js';
 import ChatHistory from '../models/ChatHistory.js';
 import * as geminiService from '../utils/geminiService.js';
-import { findRelevantChunks } from '../utils/textChunker.js';
+import { findRelevantChunksByEmbedding } from '../utils/vectorSearch.js';
 
 // @desc Generate flashcards for a document
 // @route POST /api/ai/generate-flashcards
@@ -196,7 +196,14 @@ export const chat = async (req, res, next) => {
             });
         }
         // find relevant chunks
-        const relevantChunks = findRelevantChunks(document.chunks, question,3);
+        const relevantChunks = await findRelevantChunksByEmbedding(document.chunks, question,5);
+        console.log(
+    "Retrieved Chunks:",
+    relevantChunks.map(chunk => ({
+        index: chunk.chunkIndex,
+        score: chunk.score
+    }))
+);
         const chunkIndices = relevantChunks.map(c => c.chunkIndex);
 
         // get or create chat histor
@@ -277,7 +284,7 @@ export const explainConcept = async (req, res, next) => {
         }
 
         //find relevant chunks for concept
-        const relevantChunks = findRelevantChunks(document.chunks, concept, 3);
+        const relevantChunks = await findRelevantChunksByEmbedding(document.chunks, concept, 3);
         const context = relevantChunks.map(c => c.content).join('\n\n');
 
         // generate explanation using gemini

@@ -7,6 +7,7 @@ import { chunkText } from '../utils/textChunker.js';
 import fs from 'fs/promises';
 import mongoose from 'mongoose';
 import { count } from 'console';
+import { generateEmbedding } from '../utils/embeddingService.js';
 
 // @desc Upload a document
 // @route POST /api/documents/upload
@@ -66,25 +67,60 @@ export const uploadDocument = async (req, res, next) => {
 //Helper function to process PDF and update document status
 const processPDF = async (documentId, filePath) => {
     try {
-        const { text } = await extractTextFromPDF(filePath);
 
-        // create chunks
-        const chunks = chunkText(text, 500, 50);
+        const { text } =
+            await extractTextFromPDF(filePath);
 
-        // Update document status
-        await Document.findByIdAndUpdate(documentId, { 
-            extractedText: text,
-            chunks,
-            status: "ready" 
-        });
-        console.log(`Document ${documentId} processed successfully with ${chunks.length} chunks.`);
+        // Create chunks
+        const rawChunks =
+            chunkText(text, 500, 50);
+
+        // Generate embeddings
+        
+
+        for (const chunk of rawChunks) {
+
+            const embedding =
+                await generateEmbedding(
+                    chunk.content
+                );
+
+            chunks.push({
+                ...chunk,
+                embedding
+            });
+        }
+       
+
+        // Save everything
+        await Document.findByIdAndUpdate(
+            documentId,
+            {
+                extractedText: text,
+                chunks,
+                status: "ready"
+            }
+        );
+
+        console.log(
+            `Document ${documentId} processed successfully with ${chunks.length} chunks.`
+        );
 
     } catch (error) {
-        console.error(`Error processing document ${documentId}:`, error);
-        await Document.findByIdAndUpdate(documentId, { status: "failed" });
+
+        console.error(
+            `Error processing document ${documentId}:`,
+            error
+        );
+
+        await Document.findByIdAndUpdate(
+            documentId,
+            {
+                status: "failed"
+            }
+        );
     }
 };
-
 // @desc Get all documents for a user
 // @route GET /api/documents
 // @access Private

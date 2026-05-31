@@ -29,8 +29,8 @@ export const generateFlashcards = async (text, count = 10) => {
     Separate each flashcard with "---".
 
     Text:
-    ${text.substring(0, 15000)}`; 
-    
+    ${text.substring(0, 15000)}`;
+
     try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
@@ -53,11 +53,11 @@ export const generateFlashcards = async (text, count = 10) => {
                 } else if (line.startsWith('A:')) {
                     answer = line.substring(2).trim();
                 } else if (line.startsWith('D:')) {
-                   
+
                     const diff = line.substring(2).trim().toLowerCase();
-                     if (['easy', 'medium', 'hard'].includes(diff)) {
+                    if (['easy', 'medium', 'hard'].includes(diff)) {
                         difficulty = diff;
-                     }
+                    }
                 }
             }
             if (question && answer) {
@@ -69,33 +69,48 @@ export const generateFlashcards = async (text, count = 10) => {
         console.error("Error generating flashcards:", error);
         throw new Error("Failed to generate flashcards");
     }
-    };
+};
 
-    /**
-     * Generate quiz questions from text
-     * @param {string} text - The input text to generate quiz questions from
-     * @param {number} count - The number of quiz questions to generate
-     * @return {Promise<Array<{question: string, options: Array, correctAnswer: string, explanation: string, difficulty: string}>>} - An array of generated quiz questions
-     */
+/**
+ * Generate quiz questions from text
+ * @param {string} text - The input text to generate quiz questions from
+ * @param {number} count - The number of quiz questions to generate
+ * @return {Promise<Array<{question: string, options: Array, correctAnswer: string, explanation: string, difficulty: string}>>} - An array of generated quiz questions
+ */
 
 export const generateQuiz = async (text, numQuestions = 5) => {
     const prompt = `Generate exactly ${numQuestions} multiple-choice quiz questions from the following text.
+
 Format each question as:
+
 Q: [Question]
 01: [Option 1]
 02: [Option 2]
 03: [Option 3]
 04: [Option 4]
-C: [Correct option number: 01, 02, 03, or 04]
-E: [Brief explanation of the correct answer]
+
+C: [Exact correct answer text]
+
+Example:
+
+01: Apple
+02: Mango
+03: Banana
+04: Orange
+
+C: Banana
+
+Never return option numbers.
+Return the full correct answer text.
+
+E: [Brief explanation]
 D: [Difficulty level: Easy, Medium, Hard]
 
 Separate each question with "---".
 
 Text:
 ${text.substring(0, 15000)}`;
-
-    try{
+    try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: prompt,
@@ -107,32 +122,50 @@ ${text.substring(0, 15000)}`;
         const quizQuestions = [];
         const questionBlocks = generatedText.split('---').filter(q => q.trim());
 
-        for(const block of questionBlocks){
+        for (const block of questionBlocks) {
             const lines = block.trim().split('\n');
             let question = '', options = [], correctAnswer = '', explanation = '', difficulty = 'medium';
 
-            for(const line of lines){
+            for (const line of lines) {
                 const trimmedLine = line.trim();
-                if(trimmedLine.startsWith('Q:')){
+                if (trimmedLine.startsWith('Q:')) {
                     question = trimmedLine.substring(2).trim();
-                } else if(trimmedLine.startsWith('01:')){
+                } else if (trimmedLine.startsWith('01:')) {
                     options.push(trimmedLine.substring(3).trim());
-                } else if(trimmedLine.startsWith('02:')){
+                } else if (trimmedLine.startsWith('02:')) {
                     options.push(trimmedLine.substring(3).trim());
-                } else if(trimmedLine.startsWith('03:')){
+                } else if (trimmedLine.startsWith('03:')) {
                     options.push(trimmedLine.substring(3).trim());
-                } else if(trimmedLine.startsWith('04:')){
+                } else if (trimmedLine.startsWith('04:')) {
                     options.push(trimmedLine.substring(3).trim());
-                } else if(trimmedLine.startsWith('C:')){
+                } else if (trimmedLine.startsWith('C:')) {
                     correctAnswer = trimmedLine.substring(2).trim();
-                } else if(trimmedLine.startsWith('E:')){
+                } else if (trimmedLine.startsWith('E:')) {
                     explanation = trimmedLine.substring(2).trim();
-                } else if(trimmedLine.startsWith('D:')){
+                } else if (trimmedLine.startsWith('D:')) {
                     difficulty = trimmedLine.substring(2).trim().toLowerCase();
                 }
             }
             if (question && options.length === 4 && correctAnswer && explanation) {
-                quizQuestions.push({ question, options, correctAnswer, explanation, difficulty });
+
+                const answerIndex =
+                    parseInt(correctAnswer) - 1;
+
+                if (
+                    !isNaN(answerIndex) &&
+                    options[answerIndex]
+                ) {
+                    correctAnswer =
+                        options[answerIndex];
+                }
+
+                quizQuestions.push({
+                    question,
+                    options,
+                    correctAnswer,
+                    explanation,
+                    difficulty
+                });
             }
         }
         return quizQuestions.slice(0, numQuestions);
@@ -151,7 +184,7 @@ export const generateSummary = async (text) => {
     const prompt = `Summarize the following text in a concise and informative manner. Focus on the key points and main ideas, and avoid unnecessary details.
 Text:
 ${text.substring(0, 15000)}`;
-    try{
+    try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: prompt,
@@ -172,19 +205,36 @@ ${text.substring(0, 15000)}`;
  * @return {Promise<string>} - The assistant's response
  */
 export const chatWithContext = async (question, chunks) => {
-    const context = chunks.map((chunk, index) => `Chunk ${index + 1}: ${chunk.content}`).join('\n\n');
+    const context = chunks.map(chunk =>
+        `Chunk ${chunk.chunkIndex}:\n${chunk.content}`
+    ).join('\n\n');
 
     console.log("context____", context);
 
-    const prompt = `You are an assistant that helps answer questions based on the following document chunks. Use the information in the chunks to provide a clear and accurate answer to the question. If the information is not available in the chunks, say you don't know.
+    const prompt = `
+You are an AI Learning Assistant.
 
-    context:
-    ${context}
+Rules:
 
-    Question: ${question};
-    Answer:`;
+1. Answer ONLY using the provided context.
+2. If the answer is not present in the context, respond:
+   "The document does not contain enough information."
+3. Do not invent facts.
+4. Explain concepts in a simple educational way.
+5. Use bullet points when appropriate.
+6. If multiple chunks contribute to the answer, combine them logically.
+7. Keep answers concise but complete.
 
-    try{
+Context:
+${context}
+
+Question:
+${question}
+
+Answer:
+`;
+
+    try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: prompt,
@@ -210,7 +260,7 @@ export const explainConcept = async (concept, context) => {
 
     Context:
     ${context.substring(0, 10000)}`;
-    try{
+    try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: prompt,

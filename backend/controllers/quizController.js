@@ -4,7 +4,7 @@ import Quiz from "../models/Quiz.js";
 // @route GET /api/quizzes/:documentId
 // @access Private
 export const getQuizzes = async (req, res, next) => {
-    try{
+    try {
         const quizzes = await Quiz.find({
             userId: req.user._id,
             documentId: req.params.documentId
@@ -19,7 +19,7 @@ export const getQuizzes = async (req, res, next) => {
 
 
 
-    }catch (error) {
+    } catch (error) {
         next(error);
     }
 };
@@ -28,16 +28,16 @@ export const getQuizzes = async (req, res, next) => {
 // @route GET /api/quizzes/quiz/:id
 // @access Private
 export const getQuizById = async (req, res, next) => {
-    try{
+    try {
         const quiz = await Quiz.findOne({
             _id: req.params.id,
             userId: req.user._id
         });
-        if(!quiz){
+        if (!quiz) {
             return res.status(404).json({
                 success: false,
                 error: "Quiz not found",
-                statusCode : 404
+                statusCode: 404
             });
         }
         res.status(200).json({
@@ -45,7 +45,7 @@ export const getQuizById = async (req, res, next) => {
             data: quiz
         });
 
-    }catch (error) {
+    } catch (error) {
         next(error);
     }
 };
@@ -54,45 +54,45 @@ export const getQuizById = async (req, res, next) => {
 // @route POST /api/quizzes/:id/submit
 // @access Private
 export const submitQuiz = async (req, res, next) => {
-    try{
+    try {
         const { answers } = req.body;
 
-        if(!Array.isArray(answers)){
+        if (!Array.isArray(answers)) {
             return res.status(400).json({
                 success: false,
                 error: "Answers must be an array",
-                statusCode : 400
+                statusCode: 400
             });
         }
         const quiz = await Quiz.findOne({
             _id: req.params.id,
             userId: req.user._id
         });
-        if(!quiz){
+        if (!quiz) {
             return res.status(404).json({
                 success: false,
                 error: "Quiz not found",
-                statusCode : 404
+                statusCode: 404
             });
         }
-        if(quiz.completed){
+        if (quiz.completed) {
             return res.status(400).json({
                 success: false,
                 error: "Quiz already completed",
-                statusCode : 400
+                statusCode: 400
             });
         }
         //process answer
         let correctCount = 0;
         const userAnswers = [];
 
-        answers.forEach( answer =>{
+        answers.forEach(answer => {
             const { questionIndex, selectedAnswer } = answer;
 
-            if(questionIndex < quiz.questions.length){
+            if (questionIndex < quiz.questions.length) {
                 const question = quiz.questions[questionIndex];
                 const isCorrect = question.correctAnswer === selectedAnswer;
-                if(isCorrect){
+                if (isCorrect) {
                     correctCount++;
                 }
                 userAnswers.push({
@@ -125,7 +125,7 @@ export const submitQuiz = async (req, res, next) => {
             },
             message: 'Quiz submitted successfully'
         });
-    }catch (error) {
+    } catch (error) {
         next(error);
     }
 };
@@ -134,24 +134,24 @@ export const submitQuiz = async (req, res, next) => {
 // @route GET /api/quizzes/:id/results
 // @access Private
 export const getQuizResults = async (req, res, next) => {
-    try{
+    try {
         const quiz = await Quiz.findOne({
             _id: req.params.id,
             userId: req.user._id
         }).populate('documentId', 'title');
 
-        if(!quiz){
+        if (!quiz) {
             return res.status(404).json({
                 success: false,
                 error: "Quiz not found",
-                statusCode : 404
+                statusCode: 404
             });
         }
-        if(!quiz.completedAt){
+        if (!quiz.completedAt) {
             return res.status(400).json({
                 success: false,
                 error: "Quiz not completed yet",
-                statusCode : 400
+                statusCode: 400
             });
         }
         // build detailed results
@@ -178,15 +178,17 @@ export const getQuizResults = async (req, res, next) => {
                 totalQuestions: quiz.totalQuestions,
                 percentage: quiz.score,
                 completedAt: quiz.completedAt,
+                questions: detailedResults
             },
+
             results: detailedResults,
             message: 'Quiz results retrieved successfully'
         });
 
-            
 
 
-    }catch (error) {
+
+    } catch (error) {
         next(error);
     }
 };
@@ -199,8 +201,8 @@ export const getAllQuizzes = async (req, res, next) => {
         const quizzes = await Quiz.find({
             userId: req.user._id
         })
-        .populate('documentId', 'title')
-        .sort({ createdAt: -1 });
+            .populate('documentId', 'title')
+            .sort({ createdAt: -1 });
 
         res.status(200).json({
             success: true,
@@ -217,28 +219,28 @@ export const getAllQuizzes = async (req, res, next) => {
 // @route DELETE /api/quizzes/:id
 // @access Private
 export const deleteQuiz = async (req, res, next) => {
-    try{
+    try {
         const quiz = await Quiz.findOneAndDelete({
             _id: req.params.id,
             userId: req.user._id
         });
 
-        if(!quiz){
+        if (!quiz) {
             return res.status(404).json({
                 success: false,
                 error: "Quiz not found",
-                statusCode : 404
+                statusCode: 404
             });
         }
 
-      
+
 
         res.status(200).json({
             success: true,
             message: 'Quiz deleted successfully'
         });
 
-    }catch (error) {
+    } catch (error) {
         next(error);
     }
 };

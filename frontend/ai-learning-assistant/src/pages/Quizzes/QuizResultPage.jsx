@@ -23,6 +23,8 @@ const QuizResultPage = () => {
             quizId
           );
 
+          
+
         setResults(response.data);
 
       } catch (error) {
@@ -54,13 +56,14 @@ const QuizResultPage = () => {
       </div>
     );
   }
+ 
 
   const percentage =
-    results.totalQuestion > 0
+    results.totalQuestions > 0
       ? Math.round(
           (results.score /
-            results.totalQuestion) *
-            100
+            results.totalQuestions) *
+            10
         )
       : 0;
 
@@ -94,7 +97,7 @@ const QuizResultPage = () => {
             </p>
 
             <h2 className="text-4xl font-bold">
-              {results.totalQuestion}
+              {results.totalQuestions}
             </h2>
 
           </div>
