@@ -208,7 +208,9 @@ export const chat = async (req, res, next) => {
     chunkIndex: chunk.chunkIndex,
     pageNumber: chunk.pageNumber,
     preview:
-        chunk.content.substring(0, 120) + "..."
+        chunk.content.length > 80
+            ? chunk.content.substring(0, 80) + "..."
+            : chunk.content
 }));
         // get or create chat histor
         let chatHistory = await ChatHistory.findOne({
@@ -233,13 +235,13 @@ export const chat = async (req, res, next) => {
                 role: 'user',
                 content: question,
                 timestamp: new Date(),
-                relevantChunks: sources,
+                relevantChunks: [],
             },
             {
                 role: 'assistant',
                 content: response,
                 timestamp: new Date(),
-                relevantChunks: sources,
+                relevantChunks: [],
             }
         );
         await chatHistory.save();

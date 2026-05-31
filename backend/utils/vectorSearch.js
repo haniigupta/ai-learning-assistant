@@ -77,8 +77,7 @@ export const findRelevantChunksByEmbedding =
 
 
         return scoredChunks
-            .sort(
-                (a, b) => b.score - a.score
-            )
-            .slice(0, maxChunks);
+    .filter(chunk => chunk.score > 0.55)
+    .sort((a,b)=>b.score-a.score)
+    .slice(0,maxChunks);
     };

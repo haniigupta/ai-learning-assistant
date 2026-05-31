@@ -73,11 +73,12 @@ const processPDF = async (documentId, filePath) => {
 
         // Create chunks
         const rawChunks =
-            chunkText(text, 500, 50);
+            chunkText(text, 200, 20);
 
         // Generate embeddings
         
-
+         const chunks = [];
+         
         for (const chunk of rawChunks) {
 
             const embedding =

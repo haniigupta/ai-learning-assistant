@@ -199,12 +199,19 @@ const DocumentDetailPage = () => {
         id,
         currentQuestion
       );
+      console.log(
+        "CHAT RESPONSE:",
+        response
+      );
 
       const aiMessage = {
         role: 'assistant',
         content:
           response?.data?.response ||
-          'No response received'
+          'No response received',
+
+        sources:
+          response?.data?.sources || []
       };
 
       setMessages(prev => [...prev, aiMessage]);
