@@ -46,7 +46,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             />
 
             {/* Sidebar */}
-            <aside className={` fixed md:static top-0 left-0 z-50 h-full w-64 bg-white border-r border-gray-200 flex flex-col shrink-0 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 `} >
+            <aside className={` fixed md:static top-0 left-0 z-50 h-full w-64 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 flex flex-col shrink-0 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 `} >
 
                 {/* Logo */}
                 <div className='flex items-center justify-between h-20 px-6 border-b border-gray-200'>
@@ -64,11 +64,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
 
                         <div>
 
-                            <h1 className='text-base font-bold text-gray-900'>
+                            <h1 className='text-base font-bold text-gray-900 dark:text-white '>
                                 AI Learning
                             </h1>
 
-                            <p className='text-xs text-gray-500'>
+                            <p className='text-xs text-gray-500 dark:text-slate-400'>
                                 Assistant
                             </p>
 
@@ -105,7 +105,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                                     `flex items-center gap-3 px-3 py-3 rounded-xl font-medium transition-all duration-200 ${
                                         isActive
                                             ? 'bg-[#00d492] text-white shadow-md'
-                                            : 'text-gray-700 hover:bg-gray-100 hover:text-[#00d492]'
+                                            : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-[#00d492]'
                                     }`
                                 }
                             >
@@ -130,7 +130,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
 
                     <button
                         onClick={handleLogout}
-                        className='w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all duration-200 font-medium'
+                        className='w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-200 font-medium'
                     >
 
                         <LogOut

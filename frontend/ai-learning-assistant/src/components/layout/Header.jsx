@@ -1,14 +1,16 @@
 
 import React from 'react'
 import { useAuth } from '../../context/AuthContext'
-import { Bell, User, Menu } from 'lucide-react';
+import { Bell, User, Menu, Moon, Sun } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 
 const Header = ({ toggleSidebar }) => {
 
     const { user } = useAuth();
+    const { darkMode, toggleTheme } = useTheme();
 
     return (
-        <header className='sticky top-0 z-40 bg-white border-b border-gray-200'>
+        <header className='sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 transition-colors duration-300'>
 
             <div className='flex items-center justify-between px-4 md:px-6 py-4'>
 
@@ -24,9 +26,29 @@ const Header = ({ toggleSidebar }) => {
                 <div className='flex-1'></div>
 
                 <div className='flex items-center gap-4'>
+                    <button
+  onClick={toggleTheme}
+  className='w-10 h-10 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center hover:bg-gray-50 transition'
+>
+
+  {darkMode ? (
+    <Sun
+      size={18}
+      strokeWidth={2}
+      className='text-yellow-500'
+    />
+  ) : (
+    <Moon
+      size={18}
+      strokeWidth={2}
+      className='text-gray-600'
+    />
+  )}
+
+</button>
 
                     {/* Notification */}
-                    <button className='relative w-10 h-10 rounded-xl border border-gray-200 bg-white flex items-center justify-center hover:bg-gray-50 transition'>
+                    <button className='relative w-10 h-10 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center hover:bg-gray-50 transition'>
 
                         <Bell
                             size={18}
@@ -52,11 +74,11 @@ const Header = ({ toggleSidebar }) => {
 
                         <div className='hidden sm:block'>
 
-                            <p className='text-sm font-semibold text-gray-900'>
+                            <p className='text-sm font-semibold text-gray-900 dark:text-white'>
                                 {user?.username || 'User'}
                             </p>
 
-                            <p className='text-xs text-gray-500'>
+                            <p className='text-xs text-gray-500 dark:text-slate-400'>
                                 {user?.email || 'user@example.com'}
                             </p>
 
