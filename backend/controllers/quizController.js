@@ -181,7 +181,7 @@ export const getQuizResults = async (req, res, next) => {
                 questions: detailedResults
             },
 
-            results: detailedResults,
+        
             message: 'Quiz results retrieved successfully'
         });
 

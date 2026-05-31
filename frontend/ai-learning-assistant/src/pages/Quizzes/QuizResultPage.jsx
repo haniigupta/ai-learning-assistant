@@ -23,7 +23,7 @@ const QuizResultPage = () => {
             quizId
           );
 
-          
+
 
         setResults(response.data);
 
@@ -56,15 +56,15 @@ const QuizResultPage = () => {
       </div>
     );
   }
- 
+
 
   const percentage =
     results.totalQuestions > 0
       ? Math.round(
-          (results.score /
-            results.totalQuestions) *
-            10
-        )
+        (results.score /
+          results.totalQuestions) *
+        100
+      )
       : 0;
 
   return (
@@ -125,25 +125,55 @@ const QuizResultPage = () => {
 
             <div
               key={index}
-              className="bg-white border rounded-2xl p-6"
+              className={`border rounded-2xl p-6 ${question.isCorrect
+                  ? 'border-green-200 bg-green-50'
+                  : 'border-red-200 bg-red-50'
+                }`}
             >
 
               <h3 className="font-semibold mb-4">
-                {question.question}
+                Q{index + 1}. {question.question}
               </h3>
 
-              <p className="mb-2">
-                <span className="font-medium">
-                  Correct Answer:
-                </span>{' '}
-                {question.correctAnswer}
-              </p>
+              <div className="space-y-3">
 
-              {question.explanation && (
-                <p className="text-gray-600">
-                  {question.explanation}
-                </p>
-              )}
+                <div>
+                  <span className="font-medium">
+                    Your Answer:
+                  </span>{' '}
+
+                  <span
+                    className={
+                      question.isCorrect
+                        ? 'text-green-600 font-semibold'
+                        : 'text-red-600 font-semibold'
+                    }
+                  >
+                    {question.selectedAnswer || 'Not Answered'}
+
+                    {' '}
+
+                    {question.isCorrect ? '✓' : '✗'}
+                  </span>
+                </div>
+
+                <div>
+                  <span className="font-medium">
+                    Correct Answer:
+                  </span>{' '}
+                  {question.correctAnswer}
+                </div>
+
+                {question.explanation && (
+                  <div className="text-gray-600">
+                    <span className="font-medium">
+                      Explanation:
+                    </span>{' '}
+                    {question.explanation}
+                  </div>
+                )}
+
+              </div>
 
             </div>
 

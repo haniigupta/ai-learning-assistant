@@ -9,63 +9,63 @@ import { findRelevantChunksByEmbedding } from '../utils/vectorSearch.js';
 // @route POST /api/ai/generate-flashcards
 // @access Private
 export const generateFlashcards = async (req, res, next) => {
-    try{
-        const { documentId, count=10 } = req.body;
+    try {
+        const { documentId, count = 10 } = req.body;
 
-        if(!documentId){
+        if (!documentId) {
             return res.status(400).json({
                 success: false,
-                message: "documentId is required",  
-                statusCode : 400
+                message: "documentId is required",
+                statusCode: 400
             });
         }
-        const document = await Document.findOne({ 
-            _id: documentId, 
+        const document = await Document.findOne({
+            _id: documentId,
             userId: req.user._id,
             status: 'ready'
         });
-        if(!document){
+        if (!document) {
             return res.status(404).json({
                 success: false,
                 message: "Document not found or not ready for processing",
-                statusCode : 404
+                statusCode: 404
             });
         }
 
         // generate flashcard using gemini
         const cards = await geminiService.generateFlashcards(
-            document.extractedText, 
+            document.extractedText,
             parseInt(count)
         );
         // Delete old flashcard sets for this document
-await Flashcard.deleteMany({
-    userId: req.user._id,
-    documentId: document._id
-});
+        await Flashcard.deleteMany({
+            userId: req.user._id,
+            documentId: document._id
+        });
 
         // save flashcards to db
         const flashcardSet = await Flashcard.create({
-            
+
             documentId: document._id,
             userId: req.user._id,
-            cards: cards.map( card => ({
+            cards: cards.map(card => ({
                 question: card.question,
                 answer: card.answer,
                 difficulty: card.difficulty,
                 reviewCount: 0,
                 isStarred: false
-             }))
+            }))
 
-             
-         });
-        
+
+        });
+
 
         res.status(200).json({
             success: true,
             data: flashcardSet,
             message: 'Flashcards generated successfully'
         });
-    }catch (error) {
+    } catch (error) {
         next(error);
     }
 };
@@ -74,38 +74,38 @@ await Flashcard.deleteMany({
 // @route POST /api/ai/generate-quiz
 // @access Private
 export const generateQuiz = async (req, res, next) => {
-    try{
-        const { documentId, numQuestions =5, title } = req.body;
-        if(!documentId){
+    try {
+        const { documentId, numQuestions = 5, title } = req.body;
+        if (!documentId) {
             return res.status(400).json({
                 success: false,
                 error: "documentId is required",
-                statusCode : 400
+                statusCode: 400
             });
         }
 
-        const document = await Document.findOne({ 
-            _id: documentId, 
+        const document = await Document.findOne({
+            _id: documentId,
             userId: req.user._id,
             status: 'ready'
         });
-        if(!document){
-                return res.status(404).json({
+        if (!document) {
+            return res.status(404).json({
                 success: false,
                 error: "Document not found or not ready for processing",
-                statusCode : 404
+                statusCode: 404
             });
         }
         // generate quiz using gemini
         const quizQuestions = await geminiService.generateQuiz(
-            document.extractedText, 
+            document.extractedText,
             parseInt(numQuestions)
         );
 
         await Quiz.deleteMany({
-    userId: req.user._id,
-    documentId: document._id
-});
+            userId: req.user._id,
+            documentId: document._id
+        });
 
         // save quiz to db
         const quiz = await Quiz.create({
@@ -122,7 +122,7 @@ export const generateQuiz = async (req, res, next) => {
             data: quiz,
             message: 'Quiz generated successfully'
         });
-    }catch (error) {
+    } catch (error) {
         next(error);
     }
 };
@@ -131,25 +131,25 @@ export const generateQuiz = async (req, res, next) => {
 // @route POST /api/ai/generate-summary
 // @access Private
 export const generateSummary = async (req, res, next) => {
-    try{
+    try {
         const { documentId } = req.body;
-        if(!documentId){
+        if (!documentId) {
             return res.status(400).json({
                 success: false,
                 error: "documentId is required",
-                statusCode : 400
+                statusCode: 400
             });
         }
-        const document = await Document.findOne({ 
-            _id: documentId, 
+        const document = await Document.findOne({
+            _id: documentId,
             userId: req.user._id,
             status: 'ready'
         });
-        if(!document){
+        if (!document) {
             return res.status(404).json({
                 success: false,
                 error: "Document not found or not ready for processing",
-                statusCode : 404
+                statusCode: 404
             });
         }
         // generate summary using gemini
@@ -164,7 +164,7 @@ export const generateSummary = async (req, res, next) => {
             },
             message: 'Summary generated successfully'
         });
-    }catch (error) {
+    } catch (error) {
         next(error);
     }
 
@@ -174,45 +174,49 @@ export const generateSummary = async (req, res, next) => {
 // @route POST /api/ai/chat
 // @access Private
 export const chat = async (req, res, next) => {
-    try{
+    try {
         const { documentId, question } = req.body;
-        if(!documentId || !question){
+        if (!documentId || !question) {
             return res.status(400).json({
                 success: false,
                 error: "documentId and question are required",
-                statusCode : 400
+                statusCode: 400
             });
         }
-        const document = await Document.findOne({ 
-            _id: documentId, 
+        const document = await Document.findOne({
+            _id: documentId,
             userId: req.user._id,
             status: 'ready'
         });
-        if(!document){
+        if (!document) {
             return res.status(404).json({
                 success: false,
                 error: "Document not found or not ready for processing",
-                statusCode : 404
+                statusCode: 404
             });
         }
         // find relevant chunks
-        const relevantChunks = await findRelevantChunksByEmbedding(document.chunks, question,5);
+        const relevantChunks = await findRelevantChunksByEmbedding(document.chunks, question, 5);
         console.log(
-    "Retrieved Chunks:",
-    relevantChunks.map(chunk => ({
-        index: chunk.chunkIndex,
-        score: chunk.score
-    }))
-);
-        const chunkIndices = relevantChunks.map(c => c.chunkIndex);
-
+            "Retrieved Chunks:",
+            relevantChunks.map(chunk => ({
+                index: chunk.chunkIndex,
+                score: chunk.score
+            }))
+        );
+        const sources = relevantChunks.map(chunk => ({
+    chunkIndex: chunk.chunkIndex,
+    pageNumber: chunk.pageNumber,
+    preview:
+        chunk.content.substring(0, 120) + "..."
+}));
         // get or create chat histor
         let chatHistory = await ChatHistory.findOne({
             documentId: document._id,
             userId: req.user._id
         });
 
-        if(!chatHistory){
+        if (!chatHistory) {
             chatHistory = await ChatHistory.create({
                 documentId: document._id,
                 userId: req.user._id,
@@ -226,30 +230,30 @@ export const chat = async (req, res, next) => {
         // save convo
         chatHistory.messages.push(
             {
-                role:'user',
+                role: 'user',
                 content: question,
                 timestamp: new Date(),
-                relevantChunks: []
+                relevantChunks: sources,
             },
             {
                 role: 'assistant',
                 content: response,
                 timestamp: new Date(),
-                relevantChunks: []
+                relevantChunks: sources,
             }
-            );
+        );
         await chatHistory.save();
 
         res.status(200).json({
-            success: true,
-            data: {
-                question,
-                response,
-                relevantChunks: chunkIndices,
-                chatHistoryId: chatHistory._id
-            },
-            message: 'Chat response generated successfully'
-        });
+    success: true,
+    data: {
+        question,
+        response,
+        sources,
+        chatHistoryId: chatHistory._id
+    },
+    message: 'Chat response generated successfully'
+});
 
     } catch (error) {
         next(error);
@@ -261,25 +265,25 @@ export const chat = async (req, res, next) => {
 // @route POST /api/ai/explain-concept
 // @access Private
 export const explainConcept = async (req, res, next) => {
-    try{
+    try {
         const { documentId, concept } = req.body;
-        if(!documentId || !concept){
+        if (!documentId || !concept) {
             return res.status(400).json({
                 success: false,
                 error: "documentId and concept are required",
-                statusCode : 400
+                statusCode: 400
             });
         }
-        const document = await Document.findOne({ 
-            _id: documentId, 
+        const document = await Document.findOne({
+            _id: documentId,
             userId: req.user._id,
             status: 'ready'
         });
-        if(!document){
+        if (!document) {
             return res.status(404).json({
                 success: false,
                 error: "Document not found or not ready for processing",
-                statusCode : 404
+                statusCode: 404
             });
         }
 
@@ -308,13 +312,13 @@ export const explainConcept = async (req, res, next) => {
 // @route GET /api/ai/chat-history/:documentId
 // @access Private
 export const getChatHistory = async (req, res, next) => {
-    try{
+    try {
         const { documentId } = req.params;
-        if(!documentId){
+        if (!documentId) {
             return res.status(400).json({
                 success: false,
                 error: "documentId is required",
-                statusCode : 400
+                statusCode: 400
             });
         }
 
@@ -323,22 +327,22 @@ export const getChatHistory = async (req, res, next) => {
             userId: req.user._id
         }).select('messages');
 
-        if(!chatHistory){
+        if (!chatHistory) {
             return res.status(404).json({
                 success: false,
                 data: [],
                 message: "Chat history not found for this document",
-                statusCode : 404
+                statusCode: 404
             });
         }
-          res.status(200).json({
+        res.status(200).json({
             success: true,
             data: chatHistory.messages,
             message: 'Chat history retrieved successfully'
         });
     } catch (error) {
         next(error);
-    }    
-    
+    }
+
 
 };
