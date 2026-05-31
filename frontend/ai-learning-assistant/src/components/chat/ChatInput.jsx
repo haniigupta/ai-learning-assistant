@@ -15,7 +15,7 @@ const ChatInput = ({
   };
 
   return (
-    <div className="flex gap-3">
+    <div className="sticky bottom-0 flex gap-3 p-4 bg-white/80 backdrop-blur-xl border border-slate-200 rounded-3xl shadow-lg">
 
       <input
         type="text"
@@ -23,13 +23,13 @@ const ChatInput = ({
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Ask about this document..."
-        className="flex-1 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        className="flex-1 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
       />
 
       <button
         onClick={onSend}
         disabled={loading}
-        className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 rounded-xl transition disabled:opacity-50"
+        className="px-7 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 disabled:opacity-50"
       >
         Send
       </button>

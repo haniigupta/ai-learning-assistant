@@ -327,6 +327,17 @@ const DocumentDetailPage = () => {
                 <p className="text-gray-500 mt-1">
                   {document.fileName}
                 </p>
+                <div className="flex flex-wrap gap-2 mt-3">
+
+  <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium">
+    PDF Document
+  </span>
+
+  <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-medium">
+    AI Search Enabled
+  </span>
+
+</div>
 
               </div>
 
@@ -357,7 +368,7 @@ const DocumentDetailPage = () => {
 
       <div className="grid md:grid-cols-3 gap-6">
 
-        <div className="bg-white p-6 rounded-2xl border border-gray-200">
+        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300" >
           <p className="text-gray-500 text-sm">
             File Size
           </p>
@@ -547,11 +558,86 @@ const DocumentDetailPage = () => {
       </div>
 
 
-      <div className="bg-white border border-gray-200 rounded-3xl p-8">
+      <div className="bg-gradient-to-b from-white to-slate-50 border border-slate-200 rounded-[32px] p-8 shadow-lg">
 
-        <h2 className="text-2xl font-bold mb-6">
-          AI Chat
-        </h2>
+        <div className="flex items-center justify-between mb-6">
+
+          <div>
+
+            <h2 className="text-3xl font-bold text-slate-900">
+              AI Document Chat
+            </h2>
+
+            <p className="text-slate-500 mt-1">
+              Ask questions and get answers grounded in your document.
+            </p>
+
+          </div>
+
+          <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-50 border border-emerald-100">
+
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+
+            <span className="text-sm font-medium text-emerald-700">
+              AI Ready
+            </span>
+
+          </div>
+
+        </div>
+
+        {messages.length === 0 && (
+
+          <div className="grid md:grid-cols-3 gap-3 mb-6">
+
+            <button
+              onClick={() =>
+                setQuestion("Summarize this document")
+              }
+              className="text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-emerald-300 hover:shadow-md transition-all"
+            >
+              <p className="font-semibold">
+                📄 Summarize
+              </p>
+
+              <p className="text-sm text-slate-500 mt-1">
+                Generate a concise summary
+              </p>
+            </button>
+
+            <button
+              onClick={() =>
+                setQuestion("What are the key concepts?")
+              }
+              className="text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-emerald-300 hover:shadow-md transition-all"
+            >
+              <p className="font-semibold">
+                🧠 Key Concepts
+              </p>
+
+              <p className="text-sm text-slate-500 mt-1">
+                Extract important ideas
+              </p>
+            </button>
+
+            <button
+              onClick={() =>
+                setQuestion("Generate exam questions")
+              }
+              className="text-left p-4 rounded-2xl border border-slate-200 bg-white hover:border-emerald-300 hover:shadow-md transition-all"
+            >
+              <p className="font-semibold">
+                🎯 Exam Questions
+              </p>
+
+              <p className="text-sm text-slate-500 mt-1">
+                Create practice questions
+              </p>
+            </button>
+
+          </div>
+
+        )}
 
         <ChatWindow
           messages={messages}
