@@ -304,7 +304,7 @@ const DocumentDetailPage = () => {
 
       <div className="bg-white rounded-3xl border border-gray-200 p-8 shadow-sm">
 
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+        <div className="grid lg:grid-cols-[1.5fr_1fr] gap-8 items-center">
 
           <div>
 
@@ -329,33 +329,68 @@ const DocumentDetailPage = () => {
                 </p>
                 <div className="flex flex-wrap gap-2 mt-3">
 
-  <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium">
-    PDF Document
-  </span>
+                  <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium">
+                    PDF Document
+                  </span>
 
-  <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-medium">
-    AI Search Enabled
-  </span>
+                 <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-medium">
+  AI Search Enabled
+</span>
 
-</div>
+<span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-medium">
+  Ready
+</span>
+
+                </div>
 
               </div>
 
             </div>
 
-            <div
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl ${currentStatus.bg}`}
-            >
-              <StatusIcon
-                size={16}
-                className={currentStatus.color}
-              />
+            
 
-              <span
-                className={`font-medium capitalize ${currentStatus.color}`}
-              >
-                {document.status}
-              </span>
+            <div className="grid grid-cols-3 gap-4">
+
+              <div className="bg-slate-50 rounded-2xl p-5 text-center">
+
+                <p className="text-xs text-slate-500 uppercase">
+                  Size
+                </p>
+
+                <h3 className="text-2xl font-bold mt-2">
+                  {(document.fileSize / 1024).toFixed(1)}
+                </h3>
+
+                <p className="text-xs text-slate-500">
+                  KB
+                </p>
+
+              </div>
+
+              <div className="bg-slate-50 rounded-2xl p-5 text-center">
+
+                <p className="text-xs text-slate-500 uppercase">
+                  Cards
+                </p>
+
+                <h3 className="text-2xl font-bold mt-2">
+                  {document.flashcardCount || 0}
+                </h3>
+
+              </div>
+
+              <div className="bg-slate-50 rounded-2xl p-5 text-center">
+
+                <p className="text-xs text-slate-500 uppercase">
+                  Quiz
+                </p>
+
+                <h3 className="text-2xl font-bold mt-2">
+                  {document.quizCount || 0}
+                </h3>
+
+              </div>
+
             </div>
 
           </div>
@@ -364,199 +399,7 @@ const DocumentDetailPage = () => {
 
       </div>
 
-      {/* Stats */}
-
-      <div className="grid md:grid-cols-3 gap-6">
-
-        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300" >
-          <p className="text-gray-500 text-sm">
-            File Size
-          </p>
-          <h2 className="text-2xl font-bold mt-2">
-            {(document.fileSize / 1024).toFixed(1)} KB
-          </h2>
-        </div>
-
-        <div className="bg-white p-6 rounded-2xl border border-gray-200">
-          <p className="text-gray-500 text-sm">
-            Flashcards
-          </p>
-          <h2 className="text-2xl font-bold mt-2">
-            {document.flashcardCount || 0}
-          </h2>
-        </div>
-
-        <div className="bg-white p-6 rounded-2xl border border-gray-200">
-          <p className="text-gray-500 text-sm">
-            Quizzes
-          </p>
-          <h2 className="text-2xl font-bold mt-2">
-            {document.quizCount || 0}
-          </h2>
-        </div>
-
-      </div>
-
-      {/* Actions */}
-
-      <div className="grid md:grid-cols-3 gap-6">
-
-        <button
-          onClick={handleGenerateSummary}
-          disabled={summaryLoading}
-          className="bg-white border border-gray-200 rounded-2xl p-6 hover:border-emerald-400 hover:shadow-md transition"
-        >
-          <BrainCircuit className="mx-auto mb-4 text-emerald-500" />
-
-          <h3 className="font-semibold">
-            Generate Summary
-          </h3>
-
-          {summaryLoading && (
-            <Loader2 className="animate-spin mx-auto mt-3" />
-          )}
-        </button>
-
-        <button
-          onClick={handleGenerateFlashcards}
-          disabled={flashcardLoading}
-          className="bg-white border border-gray-200 rounded-2xl p-6 hover:border-blue-400 hover:shadow-md transition"
-        >
-          <BookOpen className="mx-auto mb-4 text-blue-500" />
-
-          <h3 className="font-semibold">
-            Generate Flashcards
-          </h3>
-
-          {flashcardLoading && (
-            <Loader2 className="animate-spin mx-auto mt-3" />
-          )}
-        </button>
-
-        <button
-          onClick={handleGenerateQuiz}
-          disabled={quizLoading}
-          className="bg-white border border-gray-200 rounded-2xl p-6 hover:border-purple-400 hover:shadow-md transition"
-        >
-          <ClipboardList className="mx-auto mb-4 text-purple-500" />
-
-          <h3 className="font-semibold">
-            Generate Quiz
-          </h3>
-
-          {quizLoading && (
-            <Loader2 className="animate-spin mx-auto mt-3" />
-          )}
-        </button>
-
-      </div>
-
-      {/* Summary */}
-
-      <div className="bg-white border border-gray-200 rounded-3xl p-8">
-
-        <h2 className="text-2xl font-bold mb-6">
-          AI Summary
-        </h2>
-
-        {!summary ? (
-          <div className="text-gray-500">
-            No summary generated yet.
-          </div>
-        ) : (
-          <div className="leading-8 text-gray-700 whitespace-pre-wrap">
-            {summary}
-          </div>
-        )}
-
-      </div>
-
-      {/* Flashcards */}
-      <div className="bg-white rounded-3xl border p-6 mt-6">
-        <h2 className="text-2xl font-bold mb-4">
-          Flashcards
-        </h2>
-
-        {!latestFlashcardSet?.cards?.length ? (
-          <p className="text-gray-500">
-            No flashcards generated yet.
-          </p>
-        ) : (
-          <div className="space-y-4">
-
-            {latestFlashcardSet.cards
-              .slice(0, 5)
-              .map((card, index) => (
-                <div
-                  key={index}
-                  className="border rounded-xl p-4"
-                >
-                  <p className="font-semibold">
-                    Q: {card.question}
-                  </p>
-
-                  <p className="text-gray-600 mt-2">
-                    A: {card.answer}
-                  </p>
-                </div>
-              ))}
-
-          </div>
-        )}
-      </div>
-
-      {/* Quiz */}
-      <div className="bg-white rounded-3xl border p-6 mt-6">
-        <h2 className="text-2xl font-bold mb-4">
-          Quiz
-        </h2>
-
-        {!latestQuiz ? (
-          <p className="text-gray-500">
-            No quiz generated yet.
-          </p>
-        ) : (
-          <div className="space-y-4">
-
-            <div className="border rounded-xl p-4">
-              <h3 className="font-semibold text-lg">
-                {latestQuiz.title}
-              </h3>
-
-              <p className="text-gray-500 mt-2">
-                {latestQuiz.questions?.length || 0} Questions
-              </p>
-
-              <button
-                onClick={() =>
-                  navigate(`/quiz/${latestQuiz._id}`)
-                }
-                className="mt-4 px-4 py-2 bg-[#00d492] text-white rounded-xl hover:opacity-90"
-              >
-                Start Quiz
-              </button>
-            </div>
-
-            {/* Preview first 3 questions */}
-            <div className="space-y-3">
-              {latestQuiz.questions
-                ?.slice(0, 3)
-                .map((question, index) => (
-                  <div
-                    key={index}
-                    className="border rounded-xl p-4"
-                  >
-                    <p className="font-medium">
-                      Q{index + 1}. {question.question}
-                    </p>
-                  </div>
-                ))}
-            </div>
-
-          </div>
-        )}
-      </div>
-
+      {/* AI Chat */}
 
       <div className="bg-gradient-to-b from-white to-slate-50 border border-slate-200 rounded-[32px] p-8 shadow-lg">
 
@@ -654,6 +497,220 @@ const DocumentDetailPage = () => {
         </div>
 
       </div>
+
+
+
+
+
+      {/* Actions */}
+
+      <div className="grid md:grid-cols-3 gap-6">
+
+        <button
+          onClick={handleGenerateSummary}
+          disabled={summaryLoading}
+          className="bg-white border border-slate-200 rounded-3xl p-8 hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+        >
+          <div className="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center mx-auto mb-4">
+
+            <BrainCircuit className="text-emerald-600" />
+
+          </div>
+
+          <h3 className="font-semibold">
+            Generate Summary
+          </h3>
+
+          {summaryLoading && (
+            <Loader2 className="animate-spin mx-auto mt-3" />
+          )}
+        </button>
+
+        <button
+          onClick={handleGenerateFlashcards}
+          disabled={flashcardLoading}
+          className="bg-white border border-slate-200 rounded-3xl p-8 hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+        >
+          <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center mx-auto mb-4">
+
+            <BookOpen className="text-blue-600" />
+
+          </div>
+
+          <h3 className="font-semibold">
+            Generate Flashcards
+          </h3>
+
+          {flashcardLoading && (
+            <Loader2 className="animate-spin mx-auto mt-3" />
+          )}
+        </button>
+
+        <button
+          onClick={handleGenerateQuiz}
+          disabled={quizLoading}
+          className="bg-white border border-slate-200 rounded-3xl p-8 hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+        >
+          <div className="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center mx-auto mb-4">
+
+            <ClipboardList className="text-purple-600" />
+
+          </div>
+
+          <h3 className="font-semibold">
+            Generate Quiz
+          </h3>
+
+          {quizLoading && (
+            <Loader2 className="animate-spin mx-auto mt-3" />
+          )}
+        </button>
+
+      </div>
+
+      {/* Summary */}
+
+      <div className="bg-white border border-gray-200 rounded-3xl p-8">
+
+        <h2 className="text-2xl font-bold mb-6">
+          AI Summary
+        </h2>
+
+        {!summary ? (
+          <div className="text-center py-12">
+
+            <div className="text-5xl mb-4">
+              🧠
+            </div>
+
+            <p className="font-semibold text-slate-700">
+              No Summary Generated
+            </p>
+
+            <p className="text-slate-500 mt-2">
+              Generate an AI-powered summary of this document.
+            </p>
+
+          </div>
+        ) : (
+          <div className="leading-8 text-gray-700 whitespace-pre-wrap">
+            {summary}
+          </div>
+        )}
+
+      </div>
+
+      {/* Flashcards */}
+      <div className="bg-white rounded-3xl border p-6 mt-6">
+        <h2 className="text-2xl font-bold mb-4">
+          Flashcards
+        </h2>
+
+        {!latestFlashcardSet?.cards?.length ? (
+          <div className="text-center py-12">
+
+            <div className="text-5xl mb-4">
+              📚
+            </div>
+
+            <p className="font-semibold text-slate-700">
+              No Flashcards Generated
+            </p>
+
+            <p className="text-slate-500 mt-2">
+              Create AI flashcards for revision.
+            </p>
+
+          </div>
+        ) : (
+          <div className="space-y-4">
+
+            {latestFlashcardSet.cards
+              .slice(0, 5)
+              .map((card, index) => (
+                <div
+                  key={index}
+                  className="border rounded-xl p-4"
+                >
+                  <p className="font-semibold">
+                    Q: {card.question}
+                  </p>
+
+                  <p className="text-gray-600 mt-2">
+                    A: {card.answer}
+                  </p>
+                </div>
+              ))}
+
+          </div>
+        )}
+      </div>
+
+      {/* Quiz */}
+      <div className="bg-white rounded-3xl border p-6 mt-6">
+        <h2 className="text-2xl font-bold mb-4">
+          Quiz
+        </h2>
+
+        {!latestQuiz ? (
+          <div className="text-center py-12">
+
+            <div className="text-5xl mb-4">
+              🎯
+            </div>
+
+            <p className="font-semibold text-slate-700">
+              No Quiz Generated
+            </p>
+
+            <p className="text-slate-500 mt-2">
+              Generate practice questions from this document.
+            </p>
+
+          </div>
+        ) : (
+          <div className="space-y-4">
+
+            <div className="border rounded-xl p-4">
+              <h3 className="font-semibold text-lg">
+                {latestQuiz.title}
+              </h3>
+
+              <p className="text-gray-500 mt-2">
+                {latestQuiz.questions?.length || 0} Questions
+              </p>
+
+              <button
+                onClick={() =>
+                  navigate(`/quiz/${latestQuiz._id}`)
+                }
+                className="mt-4 px-4 py-2 bg-[#00d492] text-white rounded-xl hover:opacity-90"
+              >
+                Start Quiz
+              </button>
+            </div>
+
+            {/* Preview first 3 questions */}
+            <div className="space-y-3">
+              {latestQuiz.questions
+                ?.slice(0, 3)
+                .map((question, index) => (
+                  <div
+                    key={index}
+                    className="border rounded-xl p-4"
+                  >
+                    <p className="font-medium">
+                      Q{index + 1}. {question.question}
+                    </p>
+                  </div>
+                ))}
+            </div>
+
+          </div>
+        )}
+      </div>
+
+
 
     </div>
 

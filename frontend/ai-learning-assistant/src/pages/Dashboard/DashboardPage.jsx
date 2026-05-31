@@ -3,16 +3,22 @@ import React, { useState, useEffect } from 'react';
 import Spinner from '../../components/common/Spinner';
 import progressService from '../../services/progressService'
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 import {
   FileText,
   BookOpen,
   BrainCircuit,
   TrendingUp,
-  Clock
+  Clock,
+  MessageSquare,
+  Upload,
+  ClipboardList
 } from 'lucide-react';
 
 const DashboardPage = () => {
+
+  const navigate = useNavigate();
 
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -94,15 +100,89 @@ const DashboardPage = () => {
     <div className='space-y-6'>
 
       {/* Header */}
-      <div>
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 p-8 text-white shadow-xl">
 
-        <h1 className='text-4xl font-semibold text-gray-900'>
-          Dashboard
-        </h1>
+        <div className="relative z-10">
 
-        <p className='mt-2 text-gray-500'>
-          Track your learning progress and activity
-        </p>
+          <p className="text-emerald-100 font-medium">
+            Welcome Back 👋
+          </p>
+
+          <h1 className="text-4xl font-bold mt-2">
+            AI Learning Assistant
+          </h1>
+
+          <p className="mt-3 text-emerald-50 max-w-xl">
+            Upload documents, generate flashcards,
+            take quizzes, and learn faster with AI.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-5">
+
+        <button
+          onClick={() => navigate('/documents')}
+          className="group bg-white border border-slate-200 rounded-3xl p-6 text-left hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+        >
+          <div className="text-3xl mb-3">
+            <div className="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center mb-4">
+  <Upload className="w-7 h-7 text-emerald-600" />
+</div>
+          </div>
+
+          <h3 className="font-bold text-lg">
+            Upload Document
+          </h3>
+
+          <p className="text-gray-500 mt-2">
+            Add new study material
+          </p>
+
+        </button>
+
+        <button
+          onClick={() => navigate('/documents')}
+          className="group bg-white border border-slate-200 rounded-3xl p-6 text-left hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+        >
+          <div className="text-3xl mb-3">
+            <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center mb-4">
+  <MessageSquare className="w-7 h-7 text-blue-600" />
+</div>
+          </div>
+
+          <h3 className="font-bold text-lg">
+            Start Chat
+          </h3>
+
+          <p className="text-gray-500 mt-2">
+            Ask questions from documents
+          </p>
+
+        </button>
+
+        <button
+          onClick={() => navigate('/documents')}
+          className="group bg-white border border-slate-200 rounded-3xl p-6 text-left hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+        >
+
+          <div className="text-3xl mb-3">
+          <div className="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center mb-4">
+  <ClipboardList className="w-7 h-7 text-purple-600" />
+</div>
+          </div>
+
+          <h3 className="font-bold text-lg">
+            Generate Quiz
+          </h3>
+
+          <p className="text-gray-500 mt-2">
+            Test your understanding
+          </p>
+
+        </button>
 
       </div>
 
@@ -148,8 +228,50 @@ const DashboardPage = () => {
 
       </div>
 
+      <div className="grid md:grid-cols-3 gap-6">
+
+  <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+
+    <p className="text-sm text-slate-500">
+      Most Active Resource
+    </p>
+
+    <h3 className="text-xl font-bold mt-3">
+      {dashboardData.recentActivity.documents?.[0]?.title || 'No Data'}
+    </h3>
+
+  </div>
+
+  <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+
+    <p className="text-sm text-slate-500">
+      Flashcards Generated
+    </p>
+
+    <h3 className="text-4xl font-bold mt-3">
+      {dashboardData.overview.totalFlashcards}
+    </h3>
+
+  </div>
+
+  <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-6 text-white shadow-lg">
+
+    <p className="text-emerald-100">
+      AI Suggestion
+    </p>
+
+    <h3 className="text-lg font-bold mt-3">
+      Generate a quiz from your latest document.
+    </h3>
+
+  </div>
+
+</div>
+
+
+
       {/* Recent Activity */}
-      <div className='bg-white border border-gray-200 rounded-2xl p-6 shadow-sm'>
+      <div className='bg-white rounded-3xl p-6 border border-slate-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300'>
 
         <div className='flex items-center gap-3 mb-6'>
 
