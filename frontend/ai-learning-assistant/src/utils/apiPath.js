@@ -1,4 +1,4 @@
-export const BASE_URL = "https://ai-learning-assistant-x6kl.onrender.com";
+export const BASE_URL = "https://ai-learning-assistant-bvxq.onrender.com";
 
 export const API_PATHS = {
   AUTH: {
