@@ -70,10 +70,12 @@ const processPDF = async (documentId, filePath) => {
 
         const { text } =
             await extractTextFromPDF(filePath);
+            console.log("TEXT LENGTH:", text?.length);
 
         // Create chunks
         const rawChunks =
             chunkText(text, 200, 20);
+            console.log("RAW CHUNKS:", rawChunks.length);
 
         // Generate embeddings
         

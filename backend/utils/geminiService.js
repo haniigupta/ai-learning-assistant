@@ -53,6 +53,8 @@ export const generateFlashcards = async (text, count = 10) => {
         for (let attempt = 1; attempt <= 3; attempt++) {
             try {
                  generatedText = await generateText(prompt);
+                 console.log("RAW FLASHCARD RESPONSE:");
+console.log(generatedText);
                 break;
             } catch (error) {
                 if (error.status !== 503 || attempt === 3) {
