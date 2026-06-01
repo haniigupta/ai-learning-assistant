@@ -189,6 +189,7 @@ ${text.substring(0, 8000)}`;
         return quizQuestions.slice(0, numQuestions);
     } catch (error) {
         console.error("Error generating quiz questions:", error);
+        throw new Error("Failed to generate quiz");
         
     }
 };
