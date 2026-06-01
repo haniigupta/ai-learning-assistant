@@ -1,3 +1,4 @@
+import { GoogleGenAI } from "@google/genai";
 import dotenv from 'dotenv'
 dotenv.config();
 
@@ -15,9 +16,7 @@ import aiRoutes from './routes/aiRoutes.js'
 import quizRoutes from './routes/quizRoutes.js'
 import progressRoutes from './routes/progressRoutes.js'
 
-import { connect } from 'http2';
-import { STATUS_CODES } from 'http';
-import { error } from 'console';
+
 
 
 // ES6 module __dirname alternative
@@ -42,7 +41,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-import { GoogleGenAI } from "@google/genai";
+
 
 app.get("/test-gemini", async (req, res) => {
   try {
