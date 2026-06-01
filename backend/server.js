@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+
 import dotenv from 'dotenv'
 dotenv.config();
 
@@ -43,30 +43,6 @@ app.use(express.urlencoded({extended: true}));
 
 
 
-app.get("/test-gemini", async (req, res) => {
-  try {
-    const ai = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY,
-    });
-
-    const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: "Reply with HELLO",
-    });
-
-    res.json({
-      success: true,
-      text: response.text,
-    });
-  } catch (error) {
-    console.error("TEST GEMINI ERROR:", error);
-
-    res.status(500).json({
-      status: error.status,
-      message: error.message,
-    });
-  }
-});
 
 //static folder for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

@@ -1,20 +1,31 @@
 import dotenv from 'dotenv';
-import { GoogleGenAI } from '@google/genai';
+import Groq from 'groq-sdk';
 
 dotenv.config();
 
-const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY,
-
+const groq = new Groq({
+    apiKey: process.env.GROQ_API_KEY,
 });
-console.log(
-  "KEY PREFIX:",
-  process.env.GEMINI_API_KEY?.slice(0, 12)
-);
 
-if (!process.env.GEMINI_API_KEY) {
-    console.warn("Warning: GEMINI_API_KEY is not set. Gemini API calls will fail.");
+if (!process.env.GROQ_API_KEY) {
+    console.warn("Warning: GROQ_API_KEY is not set.");
     process.exit(1);
+}
+const MODEL = "llama-3.3-70b-versatile";
+
+async function generateText(prompt) {
+    const completion = await groq.chat.completions.create({
+        model: MODEL,
+        messages: [
+            {
+                role: "user",
+                content: prompt
+            }
+        ],
+        temperature: 0.3,
+    });
+
+    return completion.choices[0].message.content;
 }
 
 /**
@@ -37,21 +48,18 @@ export const generateFlashcards = async (text, count = 10) => {
     ${text.substring(0, 8000)}`;
 
     try {
-        let response;
+        let generatedText = "";
 
         for (let attempt = 1; attempt <= 3; attempt++) {
             try {
-                response = await ai.models.generateContent({
-                    model: "gemini-2.0-flash",
-                    contents: prompt,
-                });
+                 generatedText = await generateText(prompt);
                 break;
             } catch (error) {
                 if (error.status !== 503 || attempt === 3) {
                     throw error;
                 }
 
-                console.log(`Gemini busy. Retrying ${attempt}/3`);
+                console.log(`Groq retry ${attempt}/3`);
 
                 await new Promise(resolve =>
                     setTimeout(resolve, 3000 * attempt)
@@ -60,7 +68,7 @@ export const generateFlashcards = async (text, count = 10) => {
         }
     
 
-    const generatedText = response.text;
+    
 
     // parse the response 
     const flashcards = [];
@@ -134,12 +142,7 @@ Separate each question with "---".
 Text:
 ${text.substring(0, 8000)}`;
     try {
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.0-flash',
-            contents: prompt,
-        });
-
-        const generatedText = response.text;
+        const generatedText = await generateText(prompt);
 
         // parse the response
         const quizQuestions = [];
@@ -209,12 +212,7 @@ export const generateSummary = async (text) => {
 Text:
 ${text.substring(0, 15000)}`;
     try {
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.0-flash',
-            contents: prompt,
-        });
-
-        const generatedText = response.text;
+        const generatedText = await generateText(prompt);
         return generatedText.trim();
     } catch (error) {
         console.error("Error generating summary:", error);
@@ -259,11 +257,7 @@ Answer:
 `;
 
     try {
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.0-flash',
-            contents: prompt,
-        });
-        const generatedText = response.text;
+        const generatedText = await generateText(prompt);
         return generatedText.trim();
 
     } catch (error) {
@@ -285,11 +279,7 @@ export const explainConcept = async (concept, context) => {
     Context:
     ${context.substring(0, 10000)}`;
     try {
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: prompt,
-        });
-        const generatedText = response.text;
+        const generatedText = await generateText(prompt);
         return generatedText.trim();
     } catch (error) {
         console.error("Error explaining concept:", error);
