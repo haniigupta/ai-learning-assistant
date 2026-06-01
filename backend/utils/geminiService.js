@@ -29,46 +29,64 @@ export const generateFlashcards = async (text, count = 10) => {
     Separate each flashcard with "---".
 
     Text:
-    ${text.substring(0, 15000)}`;
+    ${text.substring(0, 8000)}`;
 
     try {
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: prompt,
-        });
+        let response;
 
-        const generatedText = response.text;
-
-        // parse the response 
-        const flashcards = [];
-        const cards = generatedText.split('---').filter(c => c.trim());
-
-        for (const card of cards) {
-            const lines = card.trim().split('\n');
-            let question = '', answer = '', difficulty = 'medium';
-
-            for (const line of lines) {
-                if (line.startsWith('Q:')) {
-                    question = line.substring(2).trim();
-                } else if (line.startsWith('A:')) {
-                    answer = line.substring(2).trim();
-                } else if (line.startsWith('D:')) {
-
-                    const diff = line.substring(2).trim().toLowerCase();
-                    if (['easy', 'medium', 'hard'].includes(diff)) {
-                        difficulty = diff;
-                    }
+        for (let attempt = 1; attempt <= 3; attempt++) {
+            try {
+                response = await ai.models.generateContent({
+                    model: "gemini-2.0-flash",
+                    contents: prompt,
+                });
+                break;
+            } catch (error) {
+                if (error.status !== 503 || attempt === 3) {
+                    throw error;
                 }
-            }
-            if (question && answer) {
-                flashcards.push({ question, answer, difficulty });
+
+                console.log(`Gemini busy. Retrying ${attempt}/3`);
+
+                await new Promise(resolve =>
+                    setTimeout(resolve, 3000 * attempt)
+                );
             }
         }
-        return flashcards.slice(0, count); // return only the requested number of flashcards
-    } catch (error) {
-        console.error("Error generating flashcards:", error);
-        throw new Error("Failed to generate flashcards");
+    
+
+    const generatedText = response.text;
+
+    // parse the response 
+    const flashcards = [];
+    const cards = generatedText.split('---').filter(c => c.trim());
+
+    for (const card of cards) {
+        const lines = card.trim().split('\n');
+        let question = '', answer = '', difficulty = 'medium';
+
+        for (const line of lines) {
+            if (line.startsWith('Q:')) {
+                question = line.substring(2).trim();
+            } else if (line.startsWith('A:')) {
+                answer = line.substring(2).trim();
+            } else if (line.startsWith('D:')) {
+
+                const diff = line.substring(2).trim().toLowerCase();
+                if (['easy', 'medium', 'hard'].includes(diff)) {
+                    difficulty = diff;
+                }
+            }
+        }
+        if (question && answer) {
+            flashcards.push({ question, answer, difficulty });
+        }
     }
+    return flashcards.slice(0, count); // return only the requested number of flashcards
+} catch (error) {
+    console.error("Error generating flashcards:", error);
+    throw new Error("Failed to generate flashcards");
+}
 };
 
 /**
@@ -109,10 +127,10 @@ D: [Difficulty level: Easy, Medium, Hard]
 Separate each question with "---".
 
 Text:
-${text.substring(0, 15000)}`;
+${text.substring(0, 8000)}`;
     try {
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-2.0-flash',
             contents: prompt,
         });
 
@@ -186,7 +204,7 @@ Text:
 ${text.substring(0, 15000)}`;
     try {
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-2.0-flash',
             contents: prompt,
         });
 
@@ -236,7 +254,7 @@ Answer:
 
     try {
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-2.0-flash',
             contents: prompt,
         });
         const generatedText = response.text;
