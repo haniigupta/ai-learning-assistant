@@ -5,7 +5,12 @@ dotenv.config();
 
 const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
+
 });
+console.log(
+  "KEY PREFIX:",
+  process.env.GEMINI_API_KEY?.slice(0, 12)
+);
 
 if (!process.env.GEMINI_API_KEY) {
     console.warn("Warning: GEMINI_API_KEY is not set. Gemini API calls will fail.");
