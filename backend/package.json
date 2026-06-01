@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "engines": {
-  "node": "22.x"
-},
+    "node": "22.x"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
@@ -24,7 +24,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "8.15.1",
     "multer": "^2.0.2",
-    "pdf-parse": "^2.4.5"
+    "pdf-parse": "^1.1.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
