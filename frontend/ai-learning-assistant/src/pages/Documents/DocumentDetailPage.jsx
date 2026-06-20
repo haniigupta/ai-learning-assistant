@@ -333,13 +333,13 @@ const DocumentDetailPage = () => {
                     PDF Document
                   </span>
 
-                 <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-medium">
-  AI Search Enabled
-</span>
+                  <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-medium">
+                    AI Search Enabled
+                  </span>
 
-<span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-medium">
-  Ready
-</span>
+                  <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-medium">
+                    Ready
+                  </span>
 
                 </div>
 
@@ -347,7 +347,7 @@ const DocumentDetailPage = () => {
 
             </div>
 
-            
+
 
             <div className="grid grid-cols-3 gap-4">
 
