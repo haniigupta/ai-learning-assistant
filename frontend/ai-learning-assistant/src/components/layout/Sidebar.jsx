@@ -28,7 +28,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
         { to: '/dashboard', icon: LayoutDashboard, text: 'Dashboard' },
         { to: '/documents', icon: FileText, text: 'Documents' },
         { to: '/flashcards', icon: BookOpen, text: 'Flashcards' },
-         { to: '/quizzes', icon: ClipboardList, text: 'Quizzes' },
+        { to: '/quizzes', icon: ClipboardList, text: 'Quizzes' },
         { to: '/profile', icon: User, text: 'Profile' },
     ];
 
@@ -36,11 +36,10 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
         <>
             {/* Mobile Overlay */}
             <div
-                className={`fixed inset-0 bg-black/40 z-40 md:hidden transition-opacity duration-300 ${
-                    isSidebarOpen
+                className={`fixed inset-0 bg-black/40 z-40 md:hidden transition-opacity duration-300 ${isSidebarOpen
                         ? 'opacity-100 visible'
                         : 'opacity-0 invisible'
-                }`}
+                    }`}
                 onClick={toggleSidebar}
                 aria-hidden="true"
             />
@@ -51,7 +50,10 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                 {/* Logo */}
                 <div className='flex items-center justify-between h-20 px-6 border-b border-gray-200'>
 
-                    <div className='flex items-center gap-3'>
+                    <div
+                        onClick={() => navigate('/')}
+                        className='flex items-center gap-3 cursor-pointer hover:opacity-80 transition-all duration-300'
+                    >
 
                         <div className='w-10 h-10 rounded-xl bg-[#00d492] flex items-center justify-center text-white shadow-sm'>
 
@@ -102,10 +104,9 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                                     }
                                 }}
                                 className={({ isActive }) =>
-                                    `flex items-center gap-3 px-3 py-3 rounded-xl font-medium transition-all duration-200 ${
-                                        isActive
-                                            ? 'bg-[#00d492] text-white shadow-md'
-                                            : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-[#00d492]'
+                                    `flex items-center gap-3 px-3 py-3 rounded-xl font-medium transition-all duration-200 ${isActive
+                                        ? 'bg-[#00d492] text-white shadow-md'
+                                        : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-[#00d492]'
                                     }`
                                 }
                             >
