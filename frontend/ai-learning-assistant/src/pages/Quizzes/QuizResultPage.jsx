@@ -58,14 +58,7 @@ const QuizResultPage = () => {
   }
 
 
-  const percentage =
-    results.totalQuestions > 0
-      ? Math.round(
-        (results.score /
-          results.totalQuestions) *
-        100
-      )
-      : 0;
+  const percentage = results.score;
 
   return (
     <div className="max-w-5xl mx-auto">
