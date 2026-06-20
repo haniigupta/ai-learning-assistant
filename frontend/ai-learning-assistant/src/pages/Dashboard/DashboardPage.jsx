@@ -93,12 +93,7 @@ const DashboardPage = () => {
       icon: BrainCircuit,
       bgColor: 'bg-emerald-500'
     },
-    {
-      label: 'Completed Quizzes',
-      value: dashboardData.overview.completedQuizzes,
-      icon: TrendingUp,
-      bgColor: 'bg-orange-500'
-    }
+   
   ];
 
   return (
