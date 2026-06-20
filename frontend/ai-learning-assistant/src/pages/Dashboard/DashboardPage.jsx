@@ -92,6 +92,12 @@ const DashboardPage = () => {
       value: dashboardData.overview.totalQuizzes,
       icon: BrainCircuit,
       bgColor: 'bg-emerald-500'
+    },
+    {
+      label: 'Completed Quizzes',
+      value: dashboardData.overview.completedQuizzes,
+      icon: TrendingUp,
+      bgColor: 'bg-orange-500'
     }
   ];
 
@@ -129,8 +135,8 @@ const DashboardPage = () => {
         >
           <div className="text-3xl mb-3">
             <div className="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center mb-4">
-  <Upload className="w-7 h-7 text-emerald-600" />
-</div>
+              <Upload className="w-7 h-7 text-emerald-600" />
+            </div>
           </div>
 
           <h3 className="font-bold text-lg">
@@ -149,8 +155,8 @@ const DashboardPage = () => {
         >
           <div className="text-3xl mb-3">
             <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center mb-4">
-  <MessageSquare className="w-7 h-7 text-blue-600" />
-</div>
+              <MessageSquare className="w-7 h-7 text-blue-600" />
+            </div>
           </div>
 
           <h3 className="font-bold text-lg">
@@ -169,9 +175,9 @@ const DashboardPage = () => {
         >
 
           <div className="text-3xl mb-3">
-          <div className="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center mb-4">
-  <ClipboardList className="w-7 h-7 text-purple-600" />
-</div>
+            <div className="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center mb-4">
+              <ClipboardList className="w-7 h-7 text-purple-600" />
+            </div>
           </div>
 
           <h3 className="font-bold text-lg">
@@ -230,43 +236,67 @@ const DashboardPage = () => {
 
       <div className="grid md:grid-cols-3 gap-6">
 
-  <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+        <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
 
-    <p className="text-sm text-slate-500">
-      Most Active Resource
-    </p>
+          <p className="text-sm text-slate-500">
+            Most Active Resource
+          </p>
 
-    <h3 className="text-xl font-bold mt-3">
-      {dashboardData.recentActivity.documents?.[0]?.title || 'No Data'}
-    </h3>
+          <h3 className="text-xl font-bold mt-3">
+            {dashboardData.recentActivity.documents?.[0]?.title || 'No Data'}
+          </h3>
 
-  </div>
+        </div>
 
-  <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
+        <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
 
-    <p className="text-sm text-slate-500">
-      Flashcards Generated
-    </p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Average Quiz Score
+          </p>
 
-    <h3 className="text-4xl font-bold mt-3">
-      {dashboardData.overview.totalFlashcards}
-    </h3>
+          <h3 className="text-4xl font-bold mt-3 text-emerald-600">
+            {dashboardData.overview.averageScore}%
+          </h3>
 
-  </div>
+        </div>
+        <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
 
-  <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl p-6 text-white shadow-lg">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+            Recent Quiz Performance
+          </p>
 
-    <p className="text-emerald-100">
-      AI Suggestion
-    </p>
+          <div className="space-y-3">
 
-    <h3 className="text-lg font-bold mt-3">
-      Generate a quiz from your latest document.
-    </h3>
+            {dashboardData.recentActivity.quizzes?.slice(0, 3).map((quiz) => (
 
-  </div>
+              <div
+                key={quiz._id}
+                className="flex items-center justify-between"
+              >
 
-</div>
+                <span className="font-medium text-slate-800 dark:text-white truncate">
+                  {quiz.title}
+                </span>
+
+                <span className="font-bold text-emerald-600">
+                  {quiz.score}%
+                </span>
+
+              </div>
+
+            ))}
+
+            {dashboardData.recentActivity.quizzes?.length === 0 && (
+              <p className="text-slate-500 dark:text-slate-400">
+                No completed quizzes yet
+              </p>
+            )}
+
+          </div>
+
+        </div>
+
+      </div>
 
 
 

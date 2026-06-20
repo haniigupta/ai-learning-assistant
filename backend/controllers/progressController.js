@@ -11,15 +11,15 @@ export const getDashboard = async (req, res, next) => {
 
         //get counts
         const totalDocuments = await Document.countDocuments({ userId });
-        const totalFlashcardSets = await Flashcard.countDocuments({  userId });
+        const totalFlashcardSets = await Flashcard.countDocuments({ userId });
         const totalQuizzes = await Quiz.countDocuments({
-    userId
-});
+            userId
+        });
 
-const completedQuizzes = await Quiz.countDocuments({
-    userId,
-    completedAt: { $ne: null }
-});
+        const completedQuizzes = await Quiz.countDocuments({
+            userId,
+            completedAt: { $ne: null }
+        });
 
         //get flashcard stats
         const flashcardSets = await Flashcard.find({ userId });
@@ -48,13 +48,13 @@ const completedQuizzes = await Quiz.countDocuments({
         const studyStreak = Math.floor(Math.random() * 7) + 1; // Placeholder for actual streak calculation
 
         console.log("===== DASHBOARD =====");
-console.log("Documents:", totalDocuments);
-console.log("Flashcard Sets:", totalFlashcardSets);
-console.log("Total Flashcards:", totalFlashcards);
-console.log("Total Quizzes:", totalQuizzes);
-console.log("Completed Quizzes:", completedQuizzes);
-console.log("Recent Documents:", recentDocuments.length);
-console.log("Recent Quizzes:", recentQuizzes.length);
+        console.log("Documents:", totalDocuments);
+        console.log("Flashcard Sets:", totalFlashcardSets);
+        console.log("Total Flashcards:", totalFlashcards);
+        console.log("Total Quizzes:", totalQuizzes);
+        console.log("Completed Quizzes:", completedQuizzes);
+        console.log("Recent Documents:", recentDocuments.length);
+        console.log("Recent Quizzes:", recentQuizzes.length);
 
         res.json({
             success: true,
@@ -77,6 +77,6 @@ console.log("Recent Quizzes:", recentQuizzes.length);
             }
         });
     } catch (error) {
-       next(error);
+        next(error);
     }
 };
