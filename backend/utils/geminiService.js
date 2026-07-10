@@ -1,5 +1,10 @@
 import dotenv from 'dotenv';
 import Groq from 'groq-sdk';
+import { buildSummaryPrompt} from '../prompts/summaryPrompt.js';
+import { buildFlashcardPrompt } from '../prompts/flashcardPrompt.js';
+import { buildQuizPrompt } from '../prompts/quizPrompt.js';
+import { buildChatPrompt } from '../prompts/chatPrompt.js';
+import { buildConceptPrompt } from '../prompts/conceptPrompt.js';
 
 dotenv.config();
 
