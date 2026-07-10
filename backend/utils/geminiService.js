@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import Groq from 'groq-sdk';
+
 import { buildSummaryPrompt} from '../prompts/summaryPrompt.js';
 import { buildFlashcardPrompt } from '../prompts/flashcardPrompt.js';
 import { buildQuizPrompt } from '../prompts/quizPrompt.js';
@@ -41,17 +42,7 @@ async function generateText(prompt) {
  * 
  */
 export const generateFlashcards = async (text, count = 10) => {
-    const prompt = `Generate exactly ${count} educational flashcards from the following text.
-    Format each flashcard as:
-    Q: [Clear, specific question]
-    A: [Concise, accurate answer]
-    D: [Difficulty level: Easy, Medium, Hard]
-    
-    Separate each flashcard with "---".
-
-    Text:
-    ${text.substring(0, 8000)}`;
-
+    const prompt = buildFlashcardPrompt(text, count);
     try {
         let generatedText = "";
 
@@ -59,7 +50,7 @@ export const generateFlashcards = async (text, count = 10) => {
             try {
                  generatedText = await generateText(prompt);
                  console.log("RAW FLASHCARD RESPONSE:");
-console.log(generatedText);
+                 console.log(generatedText);
                 break;
             } catch (error) {
                 if (error.status !== 503 || attempt === 3) {
@@ -117,37 +108,7 @@ console.log(generatedText);
  */
 
 export const generateQuiz = async (text, numQuestions = 5) => {
-    const prompt = `Generate exactly ${numQuestions} multiple-choice quiz questions from the following text.
-
-Format each question as:
-
-Q: [Question]
-01: [Option 1]
-02: [Option 2]
-03: [Option 3]
-04: [Option 4]
-
-C: [Exact correct answer text]
-
-Example:
-
-01: Apple
-02: Mango
-03: Banana
-04: Orange
-
-C: Banana
-
-Never return option numbers.
-Return the full correct answer text.
-
-E: [Brief explanation]
-D: [Difficulty level: Easy, Medium, Hard]
-
-Separate each question with "---".
-
-Text:
-${text.substring(0, 8000)}`;
+    const prompt = buildQuizPrompt(text, numQuestions);
     try {
         const generatedText = await generateText(prompt);
 
@@ -215,9 +176,7 @@ ${text.substring(0, 8000)}`;
  * @return {Promise<string>} - The generated summary
  */
 export const generateSummary = async (text) => {
-    const prompt = `Summarize the following text in a concise and informative manner. Focus on the key points and main ideas, and avoid unnecessary details.
-Text:
-${text.substring(0, 15000)}`;
+    const prompt = buildSummaryPrompt(text);
     try {
         const generatedText = await generateText(prompt);
         return generatedText.trim();
@@ -240,28 +199,7 @@ export const chatWithContext = async (question, chunks) => {
 
     console.log("context____", context);
 
-    const prompt = `
-You are an AI Learning Assistant.
-
-Rules:
-
-1. Answer ONLY using the provided context.
-2. If the answer is not present in the context, respond:
-   "The document does not contain enough information."
-3. Do not invent facts.
-4. Explain concepts in a simple educational way.
-5. Use bullet points when appropriate.
-6. If multiple chunks contribute to the answer, combine them logically.
-7. Keep answers concise but complete.
-
-Context:
-${context}
-
-Question:
-${question}
-
-Answer:
-`;
+    const prompt = buildChatPrompt(question, context);
 
     try {
         const generatedText = await generateText(prompt);
@@ -281,10 +219,7 @@ Answer:
  * @return {Promise<string>} - The explanation of the concept
  */
 export const explainConcept = async (concept, context) => {
-    const prompt = `Explain the following concept in simple terms, using the provided context. If the concept is not covered in the context, say you don't know.
-
-    Context:
-    ${context.substring(0, 10000)}`;
+    const prompt = buildConceptPrompt(concept, context);
     try {
         const generatedText = await generateText(prompt);
         return generatedText.trim();
