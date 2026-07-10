@@ -1,5 +1,7 @@
 import llmRouter from "./llmRouter.js";
 
+import flashcardParser from "../parsers/flashcardParser.js";
+
 import { buildSummaryPrompt } from "../../prompts/summaryPrompt.js";
 import { buildFlashcardPrompt } from "../../prompts/flashcardPrompt.js";
 import { buildQuizPrompt } from "../../prompts/quizPrompt.js";
