@@ -21,15 +21,24 @@ class AIService {
 
     }
 
-    async generateFlashcards(text, count) {
+    async generateFlashcards(text, count = 10) {
 
         const prompt =
             buildFlashcardPrompt(text, count);
 
-        return await llmRouter.generate({
-            prompt,
-            temperature: 0.3
-        });
+        const response =
+            await llmRouter.generate({
+
+                prompt,
+
+                temperature: 0.3
+
+            });
+
+        return flashcardParser.parse(
+            response,
+            count
+        );
 
     }
 

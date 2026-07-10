@@ -3,6 +3,7 @@ import Flashcard from '../models/Flashcard.js';
 import Quiz from '../models/Quiz.js';
 import ChatHistory from '../models/ChatHistory.js';
 import * as geminiService from '../utils/geminiService.js';
+import aiService from '../services/ai/aiService.js';
 import { findRelevantChunksByEmbedding } from '../utils/vectorSearch.js';
 
 // @desc Generate flashcards for a document
@@ -33,7 +34,7 @@ export const generateFlashcards = async (req, res, next) => {
         }
 
         // generate flashcard using gemini
-        const cards = await geminiService.generateFlashcards(
+        const cards = await aiService.generateFlashcards(
             document.extractedText,
             parseInt(count)
         );
