@@ -1,6 +1,7 @@
 import llmRouter from "./llmRouter.js";
 
 import flashcardParser from "../parsers/flashcardParser.js";
+import markdownParser from "../parsers/markdownParser.js";
 
 import { buildSummaryPrompt } from "../../prompts/summaryPrompt.js";
 import { buildFlashcardPrompt } from "../../prompts/flashcardPrompt.js";
@@ -12,14 +13,21 @@ class AIService {
 
     async generateSummary(text) {
 
-        const prompt = buildSummaryPrompt(text);
+    const prompt =
+        buildSummaryPrompt(text);
 
-        return await llmRouter.generate({
+    const response =
+        await llmRouter.generate({
+
             prompt,
+
             temperature: 0.2
+
         });
 
-    }
+    return markdownParser.clean(response);
+
+}
 
     async generateFlashcards(text, count = 10) {
 
