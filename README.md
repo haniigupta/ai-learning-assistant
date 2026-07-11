@@ -211,3 +211,178 @@ LinkedIn: https://www.linkedin.com/in/hani-gupta-3916b931b/
 ## License
 
 This project is licensed under the MIT License.
+
+```
+AI-LearningAssistant
+├─ backend
+│  ├─ .env
+│  ├─ config
+│  │  ├─ db.js
+│  │  └─ multer.js
+│  ├─ controllers
+│  │  ├─ aiController.js
+│  │  ├─ authController.js
+│  │  ├─ documentController.js
+│  │  ├─ flashcardController.js
+│  │  ├─ progressController.js
+│  │  └─ quizController.js
+│  ├─ middleware
+│  │  ├─ auth.js
+│  │  └─ errorHandler.js
+│  ├─ models
+│  │  ├─ ChatHistory.js
+│  │  ├─ Document.js
+│  │  ├─ Flashcard.js
+│  │  ├─ Quiz.js
+│  │  └─ User.js
+│  ├─ package-lock.json
+│  ├─ package.json
+│  ├─ prompts
+│  │  ├─ chatPrompt.js
+│  │  ├─ conceptPrompt.js
+│  │  ├─ flashcardPrompt.js
+│  │  ├─ quizPrompt.js
+│  │  └─ summaryPrompt.js
+│  ├─ routes
+│  │  ├─ aiRoutes.js
+│  │  ├─ authRoutes.js
+│  │  ├─ documentRoutes.js
+│  │  ├─ flashcardRoutes.js
+│  │  ├─ progressRoutes.js
+│  │  └─ quizRoutes.js
+│  ├─ server.js
+│  ├─ services
+│  │  ├─ ai
+│  │  │  ├─ aiService.js
+│  │  │  ├─ llmRouter.js
+│  │  │  ├─ promptBuilder.js
+│  │  │  └─ streamService.js
+│  │  ├─ chat
+│  │  │  └─ chatHistory.js
+│  │  ├─ parsers
+│  │  │  ├─ flashcardParser.js
+│  │  │  ├─ markdownParser.js
+│  │  │  └─ quizParser.js
+│  │  └─ rag
+│  │     ├─ citationService.js
+│  │     ├─ embeddingService.js
+│  │     └─ retrievalService.js
+│  ├─ uploads
+│  │  └─ documents
+│  │     ├─ 1779807966628-835362187-Generative AI for Business.pdf
+│  │     ├─ 1779808946785-840170557-Generative AI for Business.pdf
+│  │     ├─ 1779875163355-911259212-Generative AI for Business.pdf
+│  │     ├─ 1779876143842-695311515-DMnotes10thMay.pdf
+│  │     ├─ 1779888452854-738310398-DMnotes10thMay.pdf
+│  │     ├─ 1780066799410-717304442-scholar.pdf
+│  │     ├─ 1780131027212-134764773-Cell Cycle and cell division .pdf
+│  │     ├─ 1780140681299-226012040-file-sample_150kB.pdf
+│  │     ├─ 1780217108394-166458867-CSL-3207 Assignment.pdf
+│  │     ├─ 1780219015975-284580112-CSL-3207 Assignment.pdf
+│  │     ├─ 1780219329996-933209925-CSL-3207 Assignment.pdf
+│  │     ├─ 1780219792233-673288072-DMnotes10thMay.pdf
+│  │     ├─ 1780226789326-489837589-DMnotes10thMay.pdf
+│  │     └─ 1780227010321-419443635-DMnotes10thMay.pdf
+│  └─ utils
+│     ├─ embeddingService.js
+│     ├─ geminiService.js
+│     ├─ pdfParser.js
+│     ├─ textChunker.js
+│     └─ vectorSearch.js
+├─ backend-tree.txt
+├─ frontend
+│  ├─ ai-learning-assistant
+│  │  ├─ .vite
+│  │  │  └─ deps
+│  │  │     ├─ package.json
+│  │  │     └─ _metadata.json
+│  │  ├─ dist
+│  │  │  ├─ assets
+│  │  │  │  ├─ brain-circuit-W6UeXbxu.png
+│  │  │  │  ├─ index-CMpUwJFT.js
+│  │  │  │  └─ index-PfzOy9tX.css
+│  │  │  ├─ brain-circuit.png
+│  │  │  ├─ brain-circuit.svg
+│  │  │  └─ index.html
+│  │  ├─ eslint.config.js
+│  │  ├─ frontend-tree.txt
+│  │  ├─ index.html
+│  │  ├─ package-lock.json
+│  │  ├─ package.json
+│  │  ├─ public
+│  │  │  ├─ brain-circuit.png
+│  │  │  └─ brain-circuit.svg
+│  │  ├─ README.md
+│  │  ├─ src
+│  │  │  ├─ App.jsx
+│  │  │  ├─ assets
+│  │  │  │  └─ react.svg
+│  │  │  ├─ components
+│  │  │  │  ├─ auth
+│  │  │  │  │  └─ ProtectedRoute.jsx
+│  │  │  │  ├─ chat
+│  │  │  │  │  ├─ ChatInput.jsx
+│  │  │  │  │  ├─ ChatMessage.jsx
+│  │  │  │  │  └─ ChatWindow.jsx
+│  │  │  │  ├─ common
+│  │  │  │  │  ├─ Button.jsx
+│  │  │  │  │  └─ Spinner.jsx
+│  │  │  │  ├─ documents
+│  │  │  │  │  └─ DocumentCard.jsx
+│  │  │  │  ├─ landing
+│  │  │  │  │  ├─ FAQ.jsx
+│  │  │  │  │  ├─ Feature.jsx
+│  │  │  │  │  ├─ Footer.jsx
+│  │  │  │  │  ├─ Hero.jsx
+│  │  │  │  │  ├─ HowItWork.jsx
+│  │  │  │  │  └─ Navbar.jsx
+│  │  │  │  ├─ layout
+│  │  │  │  │  ├─ AppLayout.jsx
+│  │  │  │  │  ├─ Header.jsx
+│  │  │  │  │  └─ Sidebar.jsx
+│  │  │  │  └─ quizzes
+│  │  │  ├─ context
+│  │  │  │  ├─ AuthContext.jsx
+│  │  │  │  └─ ThemeContext.jsx
+│  │  │  ├─ index.css
+│  │  │  ├─ main.jsx
+│  │  │  ├─ pages
+│  │  │  │  ├─ Auth
+│  │  │  │  │  ├─ LoginPage.jsx
+│  │  │  │  │  └─ RegisterPage.jsx
+│  │  │  │  ├─ Dashboard
+│  │  │  │  │  └─ DashboardPage.jsx
+│  │  │  │  ├─ Documents
+│  │  │  │  │  ├─ DocumentDetailPage.jsx
+│  │  │  │  │  └─ DocumentListPage.jsx
+│  │  │  │  ├─ Flashcards
+│  │  │  │  │  ├─ FlashcardListPage.jsx
+│  │  │  │  │  └─ FlashcardPage.jsx
+│  │  │  │  ├─ Landing
+│  │  │  │  │  └─ LandingPage.jsx
+│  │  │  │  ├─ NotFoundPage.jsx
+│  │  │  │  ├─ Profile
+│  │  │  │  │  └─ ProfilePage.jsx
+│  │  │  │  └─ Quizzes
+│  │  │  │     ├─ QuizListPage.jsx
+│  │  │  │     ├─ QuizResultPage.jsx
+│  │  │  │     └─ QuizTakePage.jsx
+│  │  │  ├─ services
+│  │  │  │  ├─ aiService.js
+│  │  │  │  ├─ authService.js
+│  │  │  │  ├─ documentService.js
+│  │  │  │  ├─ flashcardService.js
+│  │  │  │  ├─ progressService.js
+│  │  │  │  └─ quizService.js
+│  │  │  └─ utils
+│  │  │     ├─ apiPath.js
+│  │  │     └─ axiosInstance.js
+│  │  ├─ src-tree.txt
+│  │  ├─ vercel.json
+│  │  └─ vite.config.js
+│  ├─ extra
+│  └─ package-lock.json
+├─ frontend-tree.txt
+└─ README.md
+
+```
