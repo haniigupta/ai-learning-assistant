@@ -154,7 +154,7 @@ export const generateSummary = async (req, res, next) => {
             });
         }
         // generate summary using gemini
-        const summary = await geminiService.generateSummary(document.extractedText);
+        const summary = await aiService.generateSummary(document.extractedText);
 
         res.status(200).json({
             success: true,
