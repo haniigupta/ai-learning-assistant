@@ -38,11 +38,12 @@ export const generateFlashcards = async (req, res, next) => {
             document.extractedText,
             parseInt(count)
         );
-        // Delete old flashcard sets for this document
-        await Flashcard.deleteMany({
-            userId: req.user._id,
-            documentId: document._id
-        });
+        // add flashcard count to document
+        const existingFlashcardCount =
+    await Flashcard.countDocuments({
+        userId: req.user._id,
+        documentId: document._id
+    });
 
         // save flashcards to db
         const flashcardSet = await Flashcard.create({
@@ -98,21 +99,25 @@ export const generateQuiz = async (req, res, next) => {
             });
         }
         // generate quiz using gemini
-        const quizQuestions = await geminiService.generateQuiz(
+        console.log(">>> generateQuiz controller called");
+        const quizQuestions = await aiService.generateQuiz(
             document.extractedText,
             parseInt(numQuestions)
         );
+       
 
-        await Quiz.deleteMany({
-            userId: req.user._id,
-            documentId: document._id
-        });
+        //adding quiz count
+        const existingQuizCount =
+    await Quiz.countDocuments({
+        userId: req.user._id,
+        documentId: document._id
+    });
 
         // save quiz to db
         const quiz = await Quiz.create({
             documentId: document._id,
             userId: req.user._id,
-            title: title || `${document.title} - Quiz`,
+            title: title ||`${document.title} - Quiz ${existingQuizCount + 1}`,
             questions: quizQuestions,
             totalQuestions: quizQuestions.length,
             userAnswers: [],

@@ -1,37 +1,41 @@
 export const buildQuizPrompt = (text, count = 5) => `
-You are an expert exam creator.
+You are an expert exam generator.
 
-Generate exactly ${count} multiple-choice questions.
+Generate EXACTLY ${count} multiple-choice questions.
+
+Return ONLY valid JSON.
+
+Do NOT wrap the JSON inside markdown.
+Do NOT write \`\`\`json.
+Do NOT write explanations before or after the JSON.
+
+The JSON schema must be:
+
+[
+  {
+    "question": "string",
+    "options": [
+      "string",
+      "string",
+      "string",
+      "string"
+    ],
+    "correctAnswer": "exact text of the correct option",
+    "explanation": "string",
+    "difficulty": "easy"
+  }
+]
 
 Rules:
 
-- Four options only.
-- Only one correct answer.
-- Questions should test understanding.
-- Do not repeat concepts.
-- Include a short explanation.
-
-Format:
-
-Q:
-
-01:
-
-02:
-
-03:
-
-04:
-
-C:
-
-E:
-
-D:
-
-Separate each question using:
-
----
+- Exactly four options.
+- correctAnswer MUST match one of the options exactly.
+- difficulty must be one of:
+  - easy
+  - medium
+  - hard
+- No duplicate questions.
+- Base every question only on the study material.
 
 Study Material:
 

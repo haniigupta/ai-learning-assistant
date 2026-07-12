@@ -276,15 +276,9 @@ const DocumentDetailPage = () => {
 
   const StatusIcon = currentStatus.icon;
 
-  const latestFlashcardSet =
-    flashcards.length > 0
-      ? flashcards[flashcards.length - 1]
-      : null;
 
-  const latestQuiz =
-    quizzes.length > 0
-      ? quizzes[quizzes.length - 1]
-      : null;
+
+
 
   return (
 
@@ -601,58 +595,82 @@ const DocumentDetailPage = () => {
       </div>
 
       {/* Flashcards */}
+
       <div className="bg-white rounded-3xl border p-6 mt-6">
-        <h2 className="text-2xl font-bold mb-4">
-          Flashcards
+
+        <h2 className="text-2xl font-bold mb-6">
+          Flashcard Sets
         </h2>
 
-        {!latestFlashcardSet?.cards?.length ? (
+        {flashcards.length === 0 ? (
+
           <div className="text-center py-12">
 
             <div className="text-5xl mb-4">
               📚
             </div>
 
-            <p className="font-semibold text-slate-700">
+            <p className="font-semibold">
               No Flashcards Generated
             </p>
 
-            <p className="text-slate-500 mt-2">
-              Create AI flashcards for revision.
-            </p>
-
           </div>
+
         ) : (
+
           <div className="space-y-4">
 
-            {latestFlashcardSet.cards
-              .slice(0, 5)
-              .map((card, index) => (
-                <div
-                  key={index}
-                  className="border rounded-xl p-4"
-                >
-                  <p className="font-semibold">
-                    Q: {card.question}
+            {flashcards.map((set, index) => (
+
+              <div
+                key={set._id}
+                className="border rounded-2xl p-5 flex justify-between items-center"
+              >
+
+                <div>
+
+                  <h3 className="font-semibold text-lg">
+                    Flashcard Set #{flashcards.length - index}
+                  </h3>
+
+                  <p className="text-gray-500">
+                    {set.cards.length} Cards
                   </p>
 
-                  <p className="text-gray-600 mt-2">
-                    A: {card.answer}
+                  <p className="text-sm text-gray-400 mt-1">
+                    {new Date(set.createdAt).toLocaleString()}
                   </p>
+
                 </div>
-              ))}
+
+                <button
+                  onClick={() =>
+                    navigate(`/flashcards/${set._id}`)
+                  }
+                  className="px-5 py-2 bg-[#00d492] text-white rounded-xl"
+                >
+                  Study
+                </button>
+
+              </div>
+
+            ))}
 
           </div>
-        )}
-      </div>
 
+        )}
+
+      </div>
       {/* Quiz */}
+
       <div className="bg-white rounded-3xl border p-6 mt-6">
-        <h2 className="text-2xl font-bold mb-4">
-          Quiz
+
+        <h2 className="text-2xl font-bold mb-6">
+          Quizzes
         </h2>
 
-        {!latestQuiz ? (
+        {quizzes.length === 0 ? (
+
           <div className="text-center py-12">
 
             <div className="text-5xl mb-4">
@@ -668,48 +686,58 @@ const DocumentDetailPage = () => {
             </p>
 
           </div>
+
         ) : (
+
           <div className="space-y-4">
 
-            <div className="border rounded-xl p-4">
-              <h3 className="font-semibold text-lg">
-                {latestQuiz.title}
-              </h3>
+            {quizzes.map((quiz, index) => (
 
-              <p className="text-gray-500 mt-2">
-                {latestQuiz.questions?.length || 0} Questions
-              </p>
-
-              <button
-                onClick={() =>
-                  navigate(`/quiz/${latestQuiz._id}`)
-                }
-                className="mt-4 px-4 py-2 bg-[#00d492] text-white rounded-xl hover:opacity-90"
+              <div
+                key={quiz._id}
+                className="border rounded-2xl p-5 flex justify-between items-center hover:shadow-md transition"
               >
-                Start Quiz
-              </button>
-            </div>
 
-            {/* Preview first 3 questions */}
-            <div className="space-y-3">
-              {latestQuiz.questions
-                ?.slice(0, 3)
-                .map((question, index) => (
-                  <div
-                    key={index}
-                    className="border rounded-xl p-4"
-                  >
-                    <p className="font-medium">
-                      Q{index + 1}. {question.question}
-                    </p>
-                  </div>
-                ))}
-            </div>
+                <div>
+
+                  <h3 className="font-semibold text-lg">
+
+                    {quiz.title}
+
+                  </h3>
+
+                  <p className="text-gray-500 mt-1">
+
+                    {quiz.questions.length} Questions
+
+                  </p>
+
+                  <p className="text-sm text-gray-400 mt-1">
+
+                    {new Date(quiz.createdAt).toLocaleString()}
+
+                  </p>
+
+                </div>
+
+                <button
+                  onClick={() =>
+                    navigate(`/quiz/${quiz._id}`)
+                  }
+                  className="px-5 py-2 bg-[#00d492] text-white rounded-xl hover:opacity-90"
+                >
+                  Start Quiz
+                </button>
+
+              </div>
+
+            ))}
 
           </div>
-        )}
-      </div>
 
+        )}
+
+      </div>
 
 
     </div>

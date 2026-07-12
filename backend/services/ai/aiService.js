@@ -2,6 +2,7 @@ import llmRouter from "./llmRouter.js";
 
 import flashcardParser from "../parsers/flashcardParser.js";
 import markdownParser from "../parsers/markdownParser.js";
+import quizParser from "../parsers/quizParser.js";
 
 import { buildSummaryPrompt } from "../../prompts/summaryPrompt.js";
 import { buildFlashcardPrompt } from "../../prompts/flashcardPrompt.js";
@@ -18,17 +19,12 @@ class AIService {
 
     const response =
         await llmRouter.generate({
-
             prompt,
-
             temperature: 0.2
-
         });
 
     return markdownParser.clean(response);
-
 }
-
     async generateFlashcards(text, count = 10) {
 
         const prompt =
@@ -50,17 +46,20 @@ class AIService {
 
     }
 
-    async generateQuiz(text, count) {
+    async generateQuiz(text, count = 5) {
 
-        const prompt =
-            buildQuizPrompt(text, count);
+    const prompt =
+        buildQuizPrompt(text, count);
 
-        return await llmRouter.generate({
+    const response =
+        await llmRouter.generate({
             prompt,
             temperature: 0.4
         });
 
-    }
+    
+    return parsed;
+}
 
     async chat(question, context) {
 
