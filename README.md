@@ -30,7 +30,7 @@ The platform allows users to upload study materials and automatically generate A
 ## 🏗️ System Architecture
 
 <p align="center">
-  <img src="../AI-LearningAssistant/frontend/ai-learning-assistant/src/assets/architecture.svg" alt="System Architecture" width="1000"/>
+  <img src="./assests/architecture.svg" alt="System Architecture" width="1000"/>
 </p>
 
 ---
