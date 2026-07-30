@@ -14,17 +14,17 @@ class AIService {
 
     async generateSummary(text) {
 
-    const prompt =
-        buildSummaryPrompt(text);
+        const prompt =
+            buildSummaryPrompt(text);
 
-    const response =
-        await llmRouter.generate({
-            prompt,
-            temperature: 0.2
-        });
+        const response =
+            await llmRouter.generate({
+                prompt,
+                temperature: 0.2
+            });
 
-    return markdownParser.clean(response);
-}
+        return markdownParser.clean(response);
+    }
     async generateFlashcards(text, count = 10) {
 
         const prompt =
@@ -48,43 +48,46 @@ class AIService {
 
     async generateQuiz(text, count = 5) {
 
-    const prompt =
-        buildQuizPrompt(text, count);
+        const prompt =
+            buildQuizPrompt(text, count);
 
-    const response =
-        await llmRouter.generate({
-            prompt,
-            temperature: 0.4
-        });
+        const response =
+            await llmRouter.generate({
+                prompt,
+                temperature: 0.4
+            });
 
-    
-    return parsed;
-}
+        const parsed =
+            quizParser.parse(response, count);
+
+        return parsed;
+    }
+
 
     async chat(question, context) {
 
         const prompt =
-            buildChatPrompt(question, context);
+        buildChatPrompt(question, context);
 
         return await llmRouter.generate({
-            prompt,
-            temperature: 0.3
-        });
+        prompt,
+        temperature: 0.3
+    });
 
     }
 
     async explainConcept(concept, context) {
 
         const prompt =
-            buildConceptPrompt(concept, context);
+        buildConceptPrompt(concept, context);
 
         return await llmRouter.generate({
-            prompt,
-            temperature: 0.3
+        prompt,
+        temperature: 0.3
         });
 
     }
 
-}
 
+}
 export default new AIService();
