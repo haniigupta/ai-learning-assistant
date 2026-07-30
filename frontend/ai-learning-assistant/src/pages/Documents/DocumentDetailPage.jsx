@@ -630,7 +630,7 @@ const DocumentDetailPage = () => {
                 <div>
 
                   <h3 className="font-semibold text-lg">
-                    Flashcard Set #{flashcards.length - index}
+                    Flashcard {flashcards.length - index}
                   </h3>
 
                   <p className="text-gray-500">
